@@ -630,6 +630,79 @@ export default function YourStory() {
           </aside>
         </div>
       </section>
+
+      {/* SECTION 3: Join the Movement — Futuristic Aurora CTA */}
+      <section
+        className="relative overflow-hidden py-20 px-6 md:px-12"
+        style={{
+          backgroundImage: 'url(/beyond_rare_website/images/your_story_cta_bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Deep gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0d0620]/70 via-[#1a0d35]/75 to-[#0d1a12]/70 pointer-events-none" />
+
+        {/* Glow orbs */}
+        <div className="absolute top-0 left-1/4 w-80 h-80 rounded-full bg-brand-purple/25 blur-3xl animate-pulse pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-brand-green/20 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-10">
+          {/* Eyebrow */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-brand-green animate-ping" />
+            <span className="text-xs font-extrabold uppercase tracking-widest text-white/70">Live Community</span>
+          </div>
+
+          {/* Headline */}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-display leading-tight text-white">
+            You Are Not <span className="story-heading-shimmer">Alone.</span>
+          </h2>
+          <p className="text-base md:text-lg text-white/75 font-semibold max-w-2xl mx-auto leading-relaxed">
+            Join thousands of rare disease warriors, caregivers, and advocates who are sharing their stories, finding community, and making their voices heard every single day.
+          </p>
+
+          {/* Stat counters row */}
+          <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto">
+            {[
+              { value: '3+', label: 'Active Groups' },
+              { value: '7k+', label: 'Rare Diseases' },
+              { value: '∞', label: 'Voices Heard' }
+            ].map(({ value, label }) => (
+              <div
+                key={label}
+                className="p-4 rounded-2xl text-center"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                }}
+              >
+                <p className="text-3xl font-black text-white">{value}</p>
+                <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider mt-1">{label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="px-10 py-3.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
+            >
+              Post Your Story ↑
+            </button>
+            <a
+              href="/beyond_rare_website/blog"
+              className="px-10 py-3.5 rounded-full font-extrabold text-sm text-white/90 hover:text-white transition-all duration-300"
+              style={{ border: '1px solid rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
+            >
+              Explore Community →
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -224,20 +224,66 @@ export default function Blog() {
                 <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">View our community events to build connection and spread awareness</p>
               </div>
 
-              <div 
-                className="relative p-10 rounded-3xl text-white overflow-hidden shadow-xl flex items-center justify-center min-h-[250px] transition-transform duration-300 hover:scale-[1.02]"
-                style={{ background: 'linear-gradient(135deg, #7b6fa8 0%, #6a5f9e 100%)' }}
+              {/* Futuristic immersive advocacy banner */}
+              <div
+                className="relative overflow-hidden rounded-3xl min-h-[400px] flex flex-col justify-between"
+                style={{
+                  backgroundImage: 'url(/beyond_rare_website/images/blog_advocacy_bg.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
               >
-                <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-brand-green/20 blur-3xl pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-brand-purple-light/20 blur-3xl pointer-events-none"></div>
-                
-                <div className="text-center space-y-4 z-10">
-                  <h3 className="text-3xl font-black font-display text-brand-green-light drop-shadow-md">Advocacy Initiatives</h3>
-                  <p className="text-base font-medium text-white/90 max-w-lg mx-auto">
-                    We are planning upcoming local fundraising walks, awareness campaigns, and policy drafts to bring McCune-Albright and other rare diseases to light.
-                  </p>
-                  <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-xs font-black uppercase tracking-widest rounded-full text-white mt-4 animate-pulse shadow-lg">
-                    Coming Soon
+                {/* Dark cinematic overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0818]/60 via-[#1a0d35]/65 to-[#06120a]/70 pointer-events-none rounded-3xl" />
+
+                {/* Glow accents */}
+                <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-brand-purple/20 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-brand-green/15 blur-3xl pointer-events-none" />
+
+                <div className="relative z-10 p-8 md:p-12 space-y-8">
+                  {/* Top eyebrow */}
+                  <div className="flex items-center gap-3">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md">
+                      <span className="w-2 h-2 rounded-full bg-brand-green animate-ping" />
+                      <span className="text-xs font-extrabold uppercase tracking-widest text-white/70">Beyond Rare Advocacy</span>
+                    </div>
+                    <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-xs font-black uppercase tracking-widest rounded-full text-brand-green-light animate-pulse">
+                      Coming Soon
+                    </div>
+                  </div>
+
+                  {/* Headline */}
+                  <div className="max-w-2xl space-y-3">
+                    <h3 className="text-3xl md:text-4xl font-black font-display text-white leading-tight">
+                      Advocacy Initiatives
+                    </h3>
+                    <p className="text-white/75 text-base font-medium leading-relaxed">
+                      We are planning upcoming local fundraising walks, awareness campaigns, and policy drafts to bring McCune-Albright and other rare diseases to light.
+                    </p>
+                  </div>
+
+                  {/* Initiative cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {[
+                      { icon: '🚶', title: 'Fundraising Walks', desc: 'Local awareness walks across communities' },
+                      { icon: '📣', title: 'Awareness Campaigns', desc: 'Digital and local media outreach programs' },
+                      { icon: '📋', title: 'Policy Drafting', desc: 'Working toward better rare disease legislation' }
+                    ].map(({ icon, title, desc }) => (
+                      <div
+                        key={title}
+                        className="p-5 rounded-2xl flex flex-col gap-2"
+                        style={{
+                          background: 'rgba(255,255,255,0.07)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                        }}
+                      >
+                        <span className="text-2xl">{icon}</span>
+                        <p className="font-extrabold text-white text-sm">{title}</p>
+                        <p className="text-white/50 text-xs font-semibold">{desc}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

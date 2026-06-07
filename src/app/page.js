@@ -190,80 +190,119 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 3: Our Story */}
-      <section className="story-section grid grid-cols-1 md:grid-cols-2">
-        {/* Left Column */}
-        <div className="story-panel-left bg-brand-purple flex flex-col items-center justify-center p-8 md:p-10 text-center select-none relative">
-          {/* Floating decorative blobs */}
-          <div className="story-blob story-blob-1" />
-          <div className="story-blob story-blob-2" />
-          <div className="story-blob story-blob-3" />
+      {/* SECTION 3: Our Story — Futuristic Immersive Redesign */}
+      <section
+        className="relative overflow-hidden"
+        style={{
+          backgroundImage: 'url(/beyond_rare_website/images/home_story_bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-purple-dark/85 via-[#2a1f4a]/80 to-brand-green-dark/70 pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col items-center space-y-6">
-            {/* Heading with shimmer */}
+        {/* Animated floating glow orbs */}
+        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-brand-purple/20 blur-3xl animate-pulse pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-56 h-56 rounded-full bg-brand-green/15 blur-3xl pointer-events-none" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-32 rounded-full bg-purple-500/10 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 min-h-[480px]">
+          {/* Left Column — Identity & Title */}
+          <div className="flex flex-col items-center justify-center p-10 md:p-14 text-center select-none border-b md:border-b-0 md:border-r border-white/10">
             <StoryReveal className="story-reveal">
-              <h2 className="story-heading-shimmer text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-wide uppercase leading-tight">
+              {/* Shimmer title */}
+              <h2 className="story-heading-shimmer text-5xl md:text-6xl lg:text-7xl font-black font-display tracking-widest uppercase leading-tight mb-8">
                 Our<br />Story
               </h2>
             </StoryReveal>
 
-            {/* Logo with glowing ring */}
             <StoryReveal className="story-reveal story-reveal-delay-1">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-white shadow-md overflow-hidden bg-white shrink-0">
+              {/* Glowing avatar ring */}
+              <div
+                className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-white/80 shadow-2xl overflow-hidden bg-white shrink-0 story-logo-ring"
+                style={{ boxShadow: '0 0 30px rgba(139,127,184,0.5), 0 0 70px rgba(139,127,184,0.2)' }}
+              >
                 <img
                   src="/beyond_rare_website/images/logo.avif"
-                  alt="Aashriya Vasamsetti Profile"
+                  alt="Aashriya Vasamsetti — Founder"
                   className="w-full h-full object-cover"
                 />
               </div>
             </StoryReveal>
-          </div>
-        </div>
 
-        {/* Right Column: Glassmorphism quote card over decorative background */}
-        <div className="story-panel-right bg-brand-lavender flex flex-col items-center justify-center p-6 md:p-8 lg:p-10 relative">
-          {/* Floating decorative blobs */}
-          <div className="story-blob story-blob-4" />
-          <div className="story-blob story-blob-5" />
-
-          <div className="relative z-10 w-full max-w-xl space-y-4">
-            {/* Glassmorphism quote card */}
-            <StoryReveal className="story-reveal story-reveal-delay-1">
-              <div className="story-quote-card relative p-5 md:p-6">
-                {/* Decorative quote marks */}
-                <span className="story-quote-mark story-quote-mark-open">&ldquo;</span>
-
-                <p className="relative z-10 text-sm md:text-base text-brand-purple-dark leading-relaxed font-medium">
-                  Since the young age of three, I&apos;ve been suffering from the rare, genetic mutation of McCune-Albright Syndrome. Throughout various surgeries and injuries, I constantly felt isolated and unseen, wishing I could find people who could share the same pain. Though I felt alone, I wanted to ensure no one else would ever have to feel that way, making it my life&apos;s goal to help alleviate the hurt for those similar to me as much as possible. Beyond Rare is a tool to make sure you or your loved ones with a rare disease feel more supported, represented, and seen, not just a website.
-                </p>
-
-                <span className="story-quote-mark story-quote-mark-close">&rdquo;</span>
-              </div>
-            </StoryReveal>
-
-            {/* Gradient divider */}
             <StoryReveal className="story-reveal story-reveal-delay-2">
-              <hr className="story-divider" />
-            </StoryReveal>
-
-            {/* Inspirational tagline + founder attribution */}
-            <StoryReveal className="story-reveal story-reveal-delay-3">
-              <div className="space-y-5">
-                <p className="text-sm md:text-base font-bold leading-relaxed text-brand-purple-dark italic">
-                  Every rare strand, each uncommon gene, and every unique story has meaning.
-                  Bonded by special lives, let&apos;s raise our voices together.
-                </p>
-
-                <div className="story-founder-attr">
-                  <p className="text-xs font-semibold text-brand-purple-dark/70 tracking-wide">
-                    &mdash; Aashriya Vasamsetti
-                  </p>
-                  <p className="text-[10px] font-medium text-brand-purple-dark/50 tracking-wider uppercase mt-0.5">
-                    Founder of Beyond Rare
-                  </p>
-                </div>
+              <div className="mt-6 space-y-1">
+                <p className="text-white/90 font-extrabold text-sm tracking-wide">Aashriya Vasamsetti</p>
+                <p className="text-white/50 text-[11px] font-semibold uppercase tracking-widest">Founder, Beyond Rare</p>
+              </div>
+              {/* Decorative DNA line */}
+              <div className="mt-6 flex items-center gap-1 justify-center">
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="rounded-full bg-white/30"
+                    style={{
+                      width: i % 2 === 0 ? '6px' : '3px',
+                      height: i % 2 === 0 ? '20px' : '10px',
+                      opacity: 0.4 + (i * 0.07)
+                    }}
+                  />
+                ))}
               </div>
             </StoryReveal>
+          </div>
+
+          {/* Right Column — Quote */}
+          <div className="flex flex-col items-center justify-center p-8 md:p-12 lg:p-16">
+            <div className="w-full max-w-xl space-y-6">
+              <StoryReveal className="story-reveal story-reveal-delay-1">
+                {/* Glassmorphic frosted quote panel */}
+                <div
+                  className="relative p-7 md:p-8 rounded-3xl"
+                  style={{
+                    background: 'rgba(255,255,255,0.07)',
+                    backdropFilter: 'blur(24px)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    boxShadow: '0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+                  }}
+                >
+                  {/* Large decorative quote */}
+                  <span
+                    className="absolute -top-4 left-6 text-8xl leading-none pointer-events-none select-none"
+                    style={{ color: 'rgba(139,127,184,0.3)', fontFamily: 'Georgia, serif' }}
+                  >&ldquo;</span>
+
+                  <p className="relative z-10 text-sm md:text-base text-white/90 leading-relaxed font-medium pt-4">
+                    Since the young age of three, I&apos;ve been suffering from the rare, genetic mutation of McCune-Albright Syndrome. Throughout various surgeries and injuries, I constantly felt isolated and unseen, wishing I could find people who could share the same pain. Though I felt alone, I wanted to ensure no one else would ever have to feel that way, making it my life&apos;s goal to help alleviate the hurt for those similar to me as much as possible. Beyond Rare is a tool to make sure you or your loved ones with a rare disease feel more supported, represented, and seen, not just a website.
+                  </p>
+
+                  <span
+                    className="absolute -bottom-8 right-6 text-8xl leading-none pointer-events-none select-none"
+                    style={{ color: 'rgba(74,107,80,0.3)', fontFamily: 'Georgia, serif' }}
+                  >&rdquo;</span>
+                </div>
+              </StoryReveal>
+
+              {/* Divider */}
+              <StoryReveal className="story-reveal story-reveal-delay-2">
+                <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              </StoryReveal>
+
+              <StoryReveal className="story-reveal story-reveal-delay-3">
+                <div className="space-y-2 pl-4 border-l-2 border-brand-purple/60">
+                  <p className="text-white/80 text-sm md:text-base font-bold leading-relaxed italic">
+                    Every rare strand, each uncommon gene, and every unique story has meaning.
+                    Bonded by special lives, let&apos;s raise our voices together.
+                  </p>
+                  {/* Glowing badge */}
+                  <span className="inline-block mt-2 px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full text-brand-green-light border border-brand-green/40 bg-brand-green/10">
+                    ✦ Beyond Rare
+                  </span>
+                </div>
+              </StoryReveal>
+            </div>
           </div>
         </div>
       </section>

@@ -160,6 +160,105 @@ export default function RareDiseases() {
 
         </div>
       </section>
+      {/* SECTION 3: Rare by the Numbers — Futuristic Biopunk Stats */}
+      <section
+        className="relative overflow-hidden py-20 px-6 md:px-12"
+        style={{
+          backgroundImage: 'url(/beyond_rare_website/images/rare_diseases_stats_bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Dark overlay with teal/navy tint */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#050d15]/80 via-[#0a1a20]/75 to-[#0d1520]/80 pointer-events-none" />
+
+        {/* Neon glow orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-brand-purple/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-teal-400/30 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 max-w-6xl mx-auto space-y-12">
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-400/30 bg-teal-400/5 backdrop-blur-md">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-teal-300/80">Did You Know?</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black font-display text-white leading-tight">
+              Rare by the <span style={{ color: '#5eead4' }}>Numbers</span>
+            </h2>
+            <p className="text-white/60 font-semibold text-sm max-w-xl mx-auto">
+              The scale of rare disease reaches further than most people realize. Here is the reality.
+            </p>
+          </div>
+
+          {/* Stats grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                stat: '7,000+',
+                label: 'Known Rare Diseases',
+                sub: 'Recognized worldwide',
+                icon: '🧬',
+                color: 'from-purple-500/20 to-purple-700/5',
+                border: 'border-purple-400/20'
+              },
+              {
+                stat: '300M',
+                label: 'People Affected',
+                sub: 'Globally each year',
+                icon: '🌍',
+                color: 'from-teal-500/20 to-teal-700/5',
+                border: 'border-teal-400/20'
+              },
+              {
+                stat: '1 in 10',
+                label: 'US Individuals',
+                sub: 'Living with a rare disease',
+                icon: '🔬',
+                color: 'from-emerald-500/20 to-emerald-700/5',
+                border: 'border-emerald-400/20'
+              },
+              {
+                stat: '95%',
+                label: 'Without Treatment',
+                sub: 'Of rare diseases have no approved cure',
+                icon: '💊',
+                color: 'from-violet-500/20 to-violet-700/5',
+                border: 'border-violet-400/20'
+              }
+            ].map(({ stat, label, sub, icon, color, border }) => (
+              <div
+                key={label}
+                className={`relative p-6 rounded-2xl bg-gradient-to-br ${color} border ${border} flex flex-col gap-3`}
+                style={{ backdropFilter: 'blur(24px)', background: 'rgba(255,255,255,0.04)' }}
+              >
+                <span className="text-3xl">{icon}</span>
+                <p className="text-4xl font-black text-white leading-none">{stat}</p>
+                <div>
+                  <p className="text-sm font-extrabold text-white/90">{label}</p>
+                  <p className="text-[11px] text-white/45 font-semibold mt-0.5">{sub}</p>
+                </div>
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+            ))}
+          </div>
+
+          {/* Call to action */}
+          <div className="text-center space-y-4">
+            <p className="text-white/60 text-sm font-semibold">
+              Knowledge is the first step. Community is the next.
+            </p>
+            <a
+              href="/beyond_rare_website/your-story"
+              className="inline-block px-10 py-3.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
+            >
+              Join Our Community →
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
