@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-purple: #8b7fb8;
+  --color-brand-purple-dark: #6a5f9e;
+  --color-brand-purple-light: #e8e3f5;
+  --color-brand-green: #4a6b50;
+  --color-brand-green-light: #d2e3d1;
+  --color-brand-green-dark: #324a37;
+  --color-brand-cream: #faf8f3;
+  --color-brand-lavender: #e8e3f5;
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui;
+  --font-handwritten: var(--font-handwritten), cursive;
+}
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  font-size: 125%;
+}
+
+body {
+  background-color: var(--color-brand-cream);
+  color: #1f2937;
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-brand-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-purple-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-purple);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(106, 95, 158, 0.08);
+}
+
+.glass-panel-dark {
+  background: rgba(106, 95, 158, 0.06);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid rgba(106, 95, 158, 0.12);
+  box-shadow: 0 4px 24px rgba(106, 95, 158, 0.06);
+}
+
+/* ── Section 3: Our Story ──────────────────────────── */
+
+/* Slow organic float for decorative blobs */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-18px) rotate(2deg); }
+  66% { transform: translateY(10px) rotate(-1.5deg); }
+}
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(12px) rotate(-2deg); }
+  66% { transform: translateY(-14px) rotate(1.5deg); }
+}
+
+/* Fade-and-slide-up reveal */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Subtle glow pulse for the logo ring */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 24px rgba(139, 127, 184, 0.35), 0 0 60px rgba(139, 127, 184, 0.12); }
+  50% { box-shadow: 0 0 36px rgba(139, 127, 184, 0.55), 0 0 90px rgba(139, 127, 184, 0.22); }
+}
+
+/* Shimmer sweep for the heading */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* The story section wrapper */
+.story-section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background image panels */
+.story-panel-left,
+.story-panel-right {
+  position: relative;
+  overflow: hidden;
+}
+
+.story-panel-left::before,
+.story-panel-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.story-panel-left::before {
+  background-image: url('/images/1.avif');
+}
+
+.story-panel-right::before {
+  background-image: url('/images/2.avif');
+}
+
+/* Floating decorative blobs */
+.story-blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.story-blob-1 {
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.5);
+  top: -40px;
+  right: -30px;
+  animation: float 8s ease-in-out infinite;
+}
+.story-blob-2 {
+  width: 120px;
+  height: 120px;
+  background: rgba(214, 228, 213, 0.6);
+  bottom: -20px;
+  left: -20px;
+  animation: float-reverse 10s ease-in-out infinite;
+}
+.story-blob-3 {
+  width: 100px;
+  height: 100px;
+  background: rgba(156, 147, 196, 0.4);
+  top: 30%;
+  left: 10%;
+  animation: float 12s ease-in-out infinite 1s;
+}
+.story-blob-4 {
+  width: 150px;
+  height: 150px;
+  background: rgba(214, 228, 213, 0.35);
+  top: -30px;
+  left: -40px;
+  animation: float-reverse 9s ease-in-out infinite 0.5s;
+}
+.story-blob-5 {
+  width: 90px;
+  height: 90px;
+  background: rgba(156, 147, 196, 0.3);
+  bottom: 10%;
+  right: 5%;
+  animation: float 11s ease-in-out infinite 2s;
+}
+
+/* Scroll-reveal animation class */
+.story-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.story-reveal.visible {
+  animation: fadeSlideUp 0.8s ease-out forwards;
+}
+.story-reveal-delay-1.visible { animation-delay: 0.15s; }
+.story-reveal-delay-2.visible { animation-delay: 0.3s; }
+.story-reveal-delay-3.visible { animation-delay: 0.45s; }
+
+/* Shimmer heading effect */
+.story-heading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(232, 227, 245, 1) 20%,
+    rgba(255, 255, 255, 1) 40%,
+    rgba(210, 227, 209, 0.9) 60%,
+    rgba(255, 255, 255, 1) 80%,
+    rgba(232, 227, 245, 1) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+/* Glowing logo container */
+.story-logo-ring {
+  animation: pulse-glow 4s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.story-logo-ring:hover {
+  transform: scale(1.08) rotate(3deg);
+}
+
+/* Glassmorphism quote card */
+.story-quote-card {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(106, 95, 158, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.story-quote-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 56px rgba(106, 95, 158, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Decorative large quotation marks */
+.story-quote-mark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 7rem;
+  line-height: 1;
+  color: rgba(156, 147, 196, 0.2);
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+}
+.story-quote-mark-open {
+  top: -10px;
+  left: 16px;
+}
+.story-quote-mark-close {
+  bottom: -40px;
+  right: 24px;
+}
+
+/* Founder attribution with left accent bar */
+.story-founder-attr {
+  position: relative;
+  padding-left: 20px;
+}
+.story-founder-attr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #8b7fb8, #4a6b50);
+}
+
+/* Divider line with gradient */
+.story-divider {
+  height: 2px;
+  border: none;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 127, 184, 0.5), rgba(74, 107, 80, 0.35), transparent);
+}
+
+/* Smooth section transitions */
+section + section {
+  border-top: none;
+}
+
+/* Button hover lift effect */
+button, a[class*="rounded-full"] {
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.2s ease;
+}
+button:hover, a[class*="rounded-full"]:hover {
+  transform: translateY(-1px);
+}
+button:active, a[class*="rounded-full"]:active {
+  transform: translateY(0);
+}
