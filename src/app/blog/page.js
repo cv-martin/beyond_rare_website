@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 export default function Blog() {
   const [leftSlideIndex, setLeftSlideIndex] = useState(0);
   const [rightSlideIndex, setRightSlideIndex] = useState(0);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -18,6 +19,7 @@ export default function Blog() {
       id: 1,
       title: "Understanding McCune-Albright Syndrome: A Personal Perspective",
       excerpt: "Living with a rare genetic mutation like McCune-Albright Syndrome presents unique daily challenges, but it also brings a distinct perspective on resilience, empathy, and advocacy.",
+      content: "McCune-Albright Syndrome (MAS) is an exceptionally rare genetic disorder that affects the bones, skin, and endocrine system. For me, living with MAS has meant navigating a maze of medical consultations, bone density scans, and the constant threat of fractures due to fibrous dysplasia. Growing up with a rare condition often means explaining your diagnosis to your peers, your teachers, and sometimes even your doctors. But beyond the physical symptoms, McCune-Albright has taught me the value of deep resilience, patient-to-patient empathy, and the critical importance of self-advocacy. By sharing my journey, I hope to light a path for others who feel isolated in their diagnosis. We are not defined by our rare genetics; we are defined by the courage and voice with which we live our lives every day.",
       author: "Aashriya Vasamsetti",
       date: "June 2, 2026",
       readTime: "5 min read",
@@ -28,6 +30,7 @@ export default function Blog() {
       id: 2,
       title: "The Power of Patient-Led Support Networks",
       excerpt: "When medical databases and local clinics lack detailed information, patients and caregivers turn to each other. Here is why peer support programs are essential in rare disease care.",
+      content: "In the rare disease space, information is often the most precious commodity. When families receive a diagnosis, they frequently find a lack of clear guidance from traditional medical channels. This is where patient-led networks step in. By organizing forums, sharing personal tip sheets on managing symptoms, and compiling directories of experienced specialists, patient communities build their own systems of care. These networks do more than provide support; they drive research. By aggregating patient registries and funding seed grants, patient-led organizations are transforming the timeline of drug development. Never underestimate the power of a connected, informed community to move mountains in medicine.",
       author: "Martin Intilt",
       date: "May 28, 2026",
       readTime: "4 min read",
@@ -38,19 +41,19 @@ export default function Blog() {
 
   const leftSlides = [
     {
-      image: "/images/1.avif",
+      image: "/beyond_rare_website/images/Neuronal Death, A Work in Progress - Mary Porter.avif",
       title: '"Neuronal Death, A Work in Progress"',
       artist: "Mary Porter",
       desc: "A stunning watercolor and ink exploration of the human nervous system, highlighting brain cells under stress."
     },
     {
-      image: "/images/2.avif",
+      image: "/beyond_rare_website/images/2.avif",
       title: '"Fragments of Connection"',
       artist: "Community Collaboration",
       desc: "An abstract canvas demonstrating how individuals across separate rare conditions share common threads of experience."
     },
     {
-      image: "/images/3.avif",
+      image: "/beyond_rare_website/images/6.avif",
       title: '"Resiliency in Bloom"',
       artist: "Mary Porter",
       desc: "An organic representation of rare mutations branching into forms of natural growth and cellular adaptation."
@@ -59,19 +62,19 @@ export default function Blog() {
 
   const rightSlides = [
     {
-      image: "/images/4.avif",
+      image: "/beyond_rare_website/images/self.avif",
       title: '"Self Portrait"',
       artist: "Gems Godfrey",
       desc: "A poignant black and white photographic study exploring isolated figures and spatial distance."
     },
     {
-      image: "/images/5.avif",
+      image: "/beyond_rare_website/images/5.avif",
       title: '"Gene Editing, Visualization"',
       artist: "Gems Godfrey",
       desc: "Visual expression of double-helix structures crossing paths, merging molecular biology with organic lines."
     },
     {
-      image: "/images/6.avif",
+      image: "/beyond_rare_website/images/2.avif",
       title: '"Microscopic Colors"',
       artist: "Alex Chen",
       desc: "A vibrant illustration of genetic patterns and cell dividing sequences under high contrast."
@@ -95,235 +98,317 @@ export default function Blog() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Page Header */}
-      <div className="mb-12 text-center max-w-3xl mx-auto space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 font-display">Our Community</h1>
-        <p className="text-base text-gray-600 leading-relaxed">
-          Visit our blog and art showcase to discover more about our unique community, or explore our advocacy events, successes, and how you can help further our cause.
-        </p>
-        <div className="w-12 h-1 bg-brand-purple mx-auto rounded-full mt-4"></div>
-      </div>
+    <div className="flex flex-col w-full overflow-hidden bg-brand-cream page-switch-enter">
+      {/* SECTION 1: Hero Banner */}
+      <section
+        className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
+        style={{
+          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="max-w-4xl mx-auto w-full text-center space-y-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold font-display leading-snug text-brand-purple-dark">
+            Our Community
+          </h1>
+          <p className="text-lg md:text-xl font-bold leading-relaxed text-brand-purple-dark/95 max-w-2xl mx-auto">
+            Visit our blog and art showcase to discover more about our unique community, or explore our advocacy events.
+          </p>
+          <div className="w-16 h-1.5 bg-brand-purple mx-auto rounded-full mt-6"></div>
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Navigation Sidebar Box */}
-        <aside className="lg:col-span-3 lg:sticky lg:top-24">
-          <div className="bg-white border border-brand-purple/10 rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">Navigation</h3>
-            <nav className="flex flex-col gap-2">
-              <button
-                onClick={() => scrollToSection('blog-feed')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold rounded-lg text-gray-700 hover:bg-brand-purple/5 hover:text-brand-purple transition duration-150"
-              >
-                📰 Rare Insights Blog
-              </button>
-              <button
-                onClick={() => scrollToSection('advocacy')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold rounded-lg text-gray-700 hover:bg-brand-purple/5 hover:text-brand-purple transition duration-150"
-              >
-                📣 Our Advocacy
-              </button>
-              <button
-                onClick={() => scrollToSection('art-showcase')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold rounded-lg text-gray-700 hover:bg-brand-purple/5 hover:text-brand-purple transition duration-150"
-              >
-                🎨 Art Showcase
-              </button>
-            </nav>
-          </div>
-        </aside>
-
-        {/* Content Area */}
-        <main className="lg:col-span-9 space-y-16">
-          {/* Section 1: Blog */}
-          <section id="blog-feed" className="scroll-mt-24 space-y-6">
-            <div className="border-b border-gray-250/50 pb-4">
-              <h2 className="text-2xl font-bold text-gray-900 font-display">Rare Insights Blog</h2>
-              <p className="text-sm text-gray-500 mt-1">Read the many unique stories of our community</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {blogPosts.map((post) => (
-                <article
-                  key={post.id}
-                  className="bg-white border border-brand-purple/10 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+      {/* SECTION 2: Main Content Feed */}
+      <section
+        className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow"
+        style={{
+          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+          
+          {/* Navigation Sidebar Box */}
+          <aside className="lg:col-span-3 lg:sticky lg:top-32 z-20">
+            <div className="glass-panel border-2 border-white/60 rounded-2xl p-5 shadow-sm space-y-4">
+              <h3 className="text-xs font-black uppercase tracking-widest text-brand-purple-dark/60">Navigation</h3>
+              <nav className="flex flex-col gap-2">
+                <button
+                  onClick={() => scrollToSection('blog-feed')}
+                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${post.color}`}>
-                        {post.category}
-                      </span>
-                      <span className="text-xs text-gray-400">{post.readTime}</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 font-display leading-snug">
-                      {post.title}
-                    </h3>
-                    <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  </div>
+                  📝 Rare Insights Blog
+                </button>
+                <button
+                  onClick={() => scrollToSection('advocacy')}
+                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
+                >
+                  📢 Our Advocacy
+                </button>
+                <button
+                  onClick={() => scrollToSection('art-showcase')}
+                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
+                >
+                  🎨 Art Showcase
+                </button>
+              </nav>
+            </div>
+          </aside>
 
-                  <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-50">
-                    <div>
-                      <p className="text-xs font-bold text-gray-800">{post.author}</p>
-                      <p className="text-[10px] text-gray-400">{post.date}</p>
+          {/* Content Area */}
+          <main className="lg:col-span-9 space-y-16">
+            
+            {/* Section 1: Blog */}
+            <section id="blog-feed" className="scroll-mt-32 space-y-6">
+              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
+                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
+                  <span className="text-3xl">📝</span> Rare Insights Blog
+                </h2>
+                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">Read the many unique stories of our community</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {blogPosts.map((post) => (
+                  <article
+                    key={post.id}
+                    className="glass-panel border-2 border-white/60 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${post.color}`}>
+                          {post.category}
+                        </span>
+                        <span className="text-xs font-bold text-brand-purple-dark/50">{post.readTime}</span>
+                      </div>
+                      <h3 className="text-lg font-black text-brand-purple-dark font-display leading-snug">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm font-medium text-brand-purple-dark/80 leading-relaxed line-clamp-3">
+                        {post.excerpt}
+                      </p>
                     </div>
-                    <button className="text-xs font-bold text-brand-purple hover:text-brand-purple-dark transition">
-                      Read Post →
+
+                    <div className="flex items-center justify-between pt-6 mt-6 border-t border-brand-purple/10">
+                      <div>
+                        <p className="text-xs font-black text-brand-purple-dark">{post.author}</p>
+                        <p className="text-[10px] font-bold text-brand-purple-dark/50">{post.date}</p>
+                      </div>
+                      <button
+                        onClick={() => setSelectedPost(post)}
+                        className="text-xs font-black px-4 py-1.5 rounded-full bg-white text-brand-purple hover:bg-brand-purple hover:text-white transition shadow-sm hover:shadow cursor-pointer"
+                      >
+                        Read Post →
+                      </button>
+                    </div>
+                  </article>
+                ))}
+
+                <div className="col-span-1 md:col-span-2 glass-panel border-2 border-dashed border-brand-purple/30 p-8 rounded-2xl text-center">
+                  <p className="text-sm font-bold text-brand-purple-dark/80 italic">
+                    Have a personal story or insight you want to share? Once you sign up, you can post directly to our Groups Feed, and the most impactful entries will be featured in the Rare Insights Blog.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 2: Advocacy */}
+            <section id="advocacy" className="scroll-mt-32 space-y-6">
+              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
+                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
+                  <span className="text-3xl">📢</span> Our Advocacy
+                </h2>
+                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">View our community events to build connection and spread awareness</p>
+              </div>
+
+              <div 
+                className="relative p-10 rounded-3xl text-white overflow-hidden shadow-xl flex items-center justify-center min-h-[250px] transition-transform duration-300 hover:scale-[1.02]"
+                style={{ background: 'linear-gradient(135deg, #7b6fa8 0%, #6a5f9e 100%)' }}
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-brand-green/20 blur-3xl pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-brand-purple-light/20 blur-3xl pointer-events-none"></div>
+                
+                <div className="text-center space-y-4 z-10">
+                  <h3 className="text-3xl font-black font-display text-brand-green-light drop-shadow-md">Advocacy Initiatives</h3>
+                  <p className="text-base font-medium text-white/90 max-w-lg mx-auto">
+                    We are planning upcoming local fundraising walks, awareness campaigns, and policy drafts to bring McCune-Albright and other rare diseases to light.
+                  </p>
+                  <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-xs font-black uppercase tracking-widest rounded-full text-white mt-4 animate-pulse shadow-lg">
+                    Coming Soon
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 3: Art */}
+            <section id="art-showcase" className="scroll-mt-32 space-y-6">
+              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
+                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
+                  <span className="text-3xl">🎨</span> Art Showcase
+                </h2>
+                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">Celebrating our community's unique artistry and expression</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left Slider Component */}
+                <div className="glass-panel border-2 border-white/60 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-lg transition duration-300">
+                  <div className="relative h-[320px] bg-white/50 flex items-center justify-center p-4 group">
+                    <img
+                      src={leftSlides[leftSlideIndex].image}
+                      alt={leftSlides[leftSlideIndex].title}
+                      className="max-w-full max-h-full object-contain rounded-xl shadow-sm transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {/* Slider controls */}
+                    <button
+                      onClick={() => prevSlide('left')}
+                      className="absolute left-3 p-2 rounded-full bg-white/90 hover:bg-white text-brand-purple shadow-lg transition transform hover:-translate-x-1 cursor-pointer"
+                      aria-label="Previous Slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => nextSlide('left')}
+                      className="absolute right-3 p-2 rounded-full bg-white/90 hover:bg-white text-brand-purple shadow-lg transition transform hover:translate-x-1 cursor-pointer"
+                      aria-label="Next Slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                      </svg>
                     </button>
                   </div>
-                </article>
-              ))}
+                  <div className="p-6 space-y-2 bg-white/30 backdrop-blur-sm border-t border-white/50">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-black text-lg text-brand-purple-dark font-display leading-tight">
+                        {leftSlides[leftSlideIndex].title}
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 bg-brand-purple text-white rounded-full font-black shrink-0 shadow-sm">
+                        {leftSlides[leftSlideIndex].artist}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-brand-purple-dark/80 leading-relaxed mt-2">
+                      {leftSlides[leftSlideIndex].desc}
+                    </p>
+                    <div className="flex justify-center gap-2 pt-4">
+                      {leftSlides.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setLeftSlideIndex(i)}
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                            i === leftSlideIndex ? 'bg-brand-purple scale-125' : 'bg-brand-purple/30 hover:bg-brand-purple/50'
+                          }`}
+                        ></button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
-              <div className="col-span-1 md:col-span-2 bg-brand-cream border border-dashed border-gray-250 p-6 rounded-2xl text-center">
-                <p className="text-sm text-gray-650 italic">
-                  Have a personal story or insight you want to share? Once you sign up, you can post directly to our Groups Feed, and the most impactful entries will be featured in the Rare Insights Blog.
-                </p>
+                {/* Right Slider Component */}
+                <div className="glass-panel border-2 border-white/60 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-lg transition duration-300">
+                  <div className="relative h-[320px] bg-white/50 flex items-center justify-center p-4 group">
+                    <img
+                      src={rightSlides[rightSlideIndex].image}
+                      alt={rightSlides[rightSlideIndex].title}
+                      className="max-w-full max-h-full object-contain rounded-xl shadow-sm transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {/* Slider controls */}
+                    <button
+                      onClick={() => prevSlide('right')}
+                      className="absolute left-3 p-2 rounded-full bg-white/90 hover:bg-white text-brand-green shadow-lg transition transform hover:-translate-x-1 cursor-pointer"
+                      aria-label="Previous Slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => nextSlide('right')}
+                      className="absolute right-3 p-2 rounded-full bg-white/90 hover:bg-white text-brand-green shadow-lg transition transform hover:translate-x-1 cursor-pointer"
+                      aria-label="Next Slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="p-6 space-y-2 bg-white/30 backdrop-blur-sm border-t border-white/50">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-black text-lg text-brand-purple-dark font-display leading-tight">
+                        {rightSlides[rightSlideIndex].title}
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 bg-brand-green text-white rounded-full font-black shrink-0 shadow-sm">
+                        {rightSlides[rightSlideIndex].artist}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-brand-purple-dark/80 leading-relaxed mt-2">
+                      {rightSlides[rightSlideIndex].desc}
+                    </p>
+                    <div className="flex justify-center gap-2 pt-4">
+                      {rightSlides.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setRightSlideIndex(i)}
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                            i === rightSlideIndex ? 'bg-brand-green scale-125' : 'bg-brand-green/30 hover:bg-brand-green/50'
+                          }`}
+                        ></button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          {/* Section 2: Advocacy */}
-          <section id="advocacy" className="scroll-mt-24 space-y-6">
-            <div className="border-b border-gray-250/50 pb-4">
-              <h2 className="text-2xl font-bold text-gray-900 font-display">Our Advocacy</h2>
-              <p className="text-sm text-gray-500 mt-1">View our community events to build connection and spread awareness</p>
-            </div>
+          </main>
+        </div>
+      </section>
 
-            <div 
-              className="relative p-10 rounded-2xl text-white overflow-hidden shadow-lg flex items-center justify-center min-h-[200px]"
-              style={{ background: 'linear-gradient(135deg, #7b6fa8 0%, #6a5f9e 100%)' }}
+      {/* Blog Post Reader Modal */}
+      {selectedPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-purple-dark/40 backdrop-blur-md transition-opacity duration-300">
+          <div className="glass-panel border-2 border-white/80 rounded-3xl max-w-2xl w-full p-8 shadow-2xl relative max-h-[85vh] overflow-y-auto flex flex-col justify-between">
+            <button
+              onClick={() => setSelectedPost(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white text-brand-purple-dark shadow-md transition transform hover:scale-105 cursor-pointer font-bold text-sm w-8 h-8 flex items-center justify-center"
+              aria-label="Close"
             >
-              <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-brand-green/10 blur-2xl pointer-events-none"></div>
-              <div className="text-center space-y-3 z-10">
-                <h3 className="text-xl font-bold font-display text-brand-green">Advocacy Initiatives</h3>
-                <p className="text-sm text-gray-400 max-w-md">
-                  We are planning upcoming local fundraising walks, awareness campaigns, and policy drafts to bring McCune-Albright and other rare diseases to light.
-                </p>
-                <div className="inline-block px-3 py-1 bg-white/10 text-xs font-bold uppercase tracking-widest rounded-full text-brand-purple-light mt-2 animate-pulse">
-                  Coming Soon
+              ✕
+            </button>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${selectedPost.color}`}>
+                  {selectedPost.category}
+                </span>
+                <span className="text-xs font-bold text-brand-purple-dark/50">{selectedPost.readTime}</span>
+              </div>
+              <h2 className="text-2xl font-black text-brand-purple-dark font-display leading-snug">
+                {selectedPost.title}
+              </h2>
+              <div className="flex items-center gap-3 py-2 border-y border-brand-purple/10">
+                <div>
+                  <p className="text-xs font-black text-brand-purple-dark">Written by {selectedPost.author}</p>
+                  <p className="text-[10px] font-bold text-brand-purple-dark/50">Published on {selectedPost.date}</p>
                 </div>
               </div>
+              <p className="text-sm font-medium text-gray-800 leading-relaxed whitespace-pre-line pt-2">
+                {selectedPost.content}
+              </p>
             </div>
-          </section>
-
-          {/* Section 3: Art */}
-          <section id="art-showcase" className="scroll-mt-24 space-y-6">
-            <div className="border-b border-gray-250/50 pb-4">
-              <h2 className="text-2xl font-bold text-gray-900 font-display">Art Showcase</h2>
-              <p className="text-sm text-gray-500 mt-1">Celebrating our community's unique artistry and expression</p>
+            <div className="pt-6 mt-6 border-t border-brand-purple/10 flex justify-end">
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-full text-xs font-extrabold shadow-sm hover:shadow transition cursor-pointer"
+              >
+                Close Article
+              </button>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Left Slider Component */}
-              <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
-                <div className="relative h-[320px] bg-brand-cream border-b border-gray-100 flex items-center justify-center p-4">
-                  <img
-                    src={leftSlides[leftSlideIndex].image}
-                    alt={leftSlides[leftSlideIndex].title}
-                    className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
-                  />
-                  {/* Slider controls */}
-                  <button
-                    onClick={() => prevSlide('left')}
-                    className="absolute left-3 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 shadow-md transition"
-                    aria-label="Previous Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => nextSlide('left')}
-                    className="absolute right-3 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 shadow-md transition"
-                    aria-label="Next Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="p-6 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-base text-gray-900 font-display">
-                      {leftSlides[leftSlideIndex].title}
-                    </h3>
-                    <span className="text-xs px-2.5 py-0.5 bg-brand-purple/10 text-brand-purple rounded-full font-semibold">
-                      {leftSlides[leftSlideIndex].artist}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-650 leading-relaxed">
-                    {leftSlides[leftSlideIndex].desc}
-                  </p>
-                  <div className="flex justify-center gap-1.5 pt-4">
-                    {leftSlides.map((_, i) => (
-                      <span
-                        key={i}
-                        className={`w-2 h-2 rounded-full transition ${
-                          i === leftSlideIndex ? 'bg-brand-purple' : 'bg-gray-200'
-                        }`}
-                      ></span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Slider Component */}
-              <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
-                <div className="relative h-[320px] bg-brand-cream border-b border-gray-100 flex items-center justify-center p-4">
-                  <img
-                    src={rightSlides[rightSlideIndex].image}
-                    alt={rightSlides[rightSlideIndex].title}
-                    className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
-                  />
-                  {/* Slider controls */}
-                  <button
-                    onClick={() => prevSlide('right')}
-                    className="absolute left-3 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 shadow-md transition"
-                    aria-label="Previous Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => nextSlide('right')}
-                    className="absolute right-3 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 shadow-md transition"
-                    aria-label="Next Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="p-6 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-base text-gray-900 font-display">
-                      {rightSlides[rightSlideIndex].title}
-                    </h3>
-                    <span className="text-xs px-2.5 py-0.5 bg-brand-green/10 text-brand-green rounded-full font-semibold">
-                      {rightSlides[rightSlideIndex].artist}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-650 leading-relaxed">
-                    {rightSlides[rightSlideIndex].desc}
-                  </p>
-                  <div className="flex justify-center gap-1.5 pt-4">
-                    {rightSlides.map((_, i) => (
-                      <span
-                        key={i}
-                        className={`w-2 h-2 rounded-full transition ${
-                          i === rightSlideIndex ? 'bg-brand-green' : 'bg-gray-200'
-                        }`}
-                      ></span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

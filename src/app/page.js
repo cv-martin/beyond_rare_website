@@ -46,9 +46,9 @@ export default function Home() {
     <div className="flex flex-col w-full overflow-hidden bg-brand-cream">
       {/* SECTION 1: Hero Banner */}
       <section
-        className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-10 pb-6"
+        className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-20 pb-20"
         style={{
-          backgroundImage: 'url(/images/5.avif)',
+          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -100,7 +100,7 @@ export default function Home() {
         id="mission"
         className="relative pt-10 pb-6 px-6 md:px-12 scroll-mt-20 overflow-hidden bg-brand-green-light"
         style={{
-          backgroundImage: 'url(/images/4.avif)',
+          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -209,11 +209,11 @@ export default function Home() {
 
             {/* Logo with glowing ring */}
             <StoryReveal className="story-reveal story-reveal-delay-1">
-              <div className="story-logo-ring w-48 h-48 rounded-full bg-white/90 p-3.5 flex items-center justify-center cursor-pointer">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-white shadow-md overflow-hidden bg-white shrink-0">
                 <img
-                  src="/images/logo.avif"
-                  alt="Beyond Rare Teddy Bear Logo"
-                  className="w-full h-full object-contain drop-shadow-sm"
+                  src="/beyond_rare_website/images/logo.avif"
+                  alt="Aashriya Vasamsetti Profile"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </StoryReveal>

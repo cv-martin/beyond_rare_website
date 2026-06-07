@@ -39,7 +39,7 @@ export default function AuthModal() {
 
         <div className="text-center mb-6">
           <div className="inline-block p-3 rounded-full bg-brand-green/10 mb-2">
-            <img src="/images/logo.avif" alt="Beyond Rare Logo" className="w-12 h-12 object-contain" />
+            <img src="/beyond_rare_website/images/logo.avif" alt="Beyond Rare Logo" className="w-12 h-12 object-contain" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 font-display">
             {authMode === 'login' ? 'Welcome Back' : 'Join Beyond Rare'}

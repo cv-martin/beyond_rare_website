@@ -35,7 +35,7 @@ export default function Header() {
           {/* Logo and Title */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative w-16 h-16 flex items-center justify-center p-0.5 bg-white rounded-full shadow-inner group-hover:scale-105 transition duration-200">
-              <img src="/images/logo.avif" alt="Beyond Rare logo" className="w-[85%] h-[85%] object-contain" />
+              <img src="/beyond_rare_website/images/logo.avif" alt="Beyond Rare logo" className="w-[85%] h-[85%] object-contain" />
             </div>
             <span className="text-3xl md:text-4xl font-black tracking-wide text-brand-green-light font-display group-hover:text-white transition duration-200">
               Beyond Rare

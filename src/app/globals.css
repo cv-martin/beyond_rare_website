@@ -118,11 +118,11 @@ body {
 }
 
 .story-panel-left::before {
-  background-image: url('/images/1.avif');
+  background-image: url('/beyond_rare_website/images/1.avif');
 }
 
 .story-panel-right::before {
-  background-image: url('/images/2.avif');
+  background-image: url('/beyond_rare_website/images/2.avif');
 }
 
 /* Floating decorative blobs */
@@ -286,4 +286,39 @@ button:hover, a[class*="rounded-full"]:hover {
 }
 button:active, a[class*="rounded-full"]:active {
   transform: translateY(0);
+}
+
+/* ── Your Story: Switch-in page transition ─────────────────────── */
+@keyframes switchIn {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(6px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.page-switch-enter {
+  animation: switchIn 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+/* Tab bar active sliding pill indicator */
+.tab-switch-bar {
+  position: relative;
+}
+.tab-switch-active {
+  position: relative;
+  z-index: 1;
+}
+.tab-switch-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  background: linear-gradient(90deg, #8b7fb8, #4a6b50);
+  border-radius: 99px;
+  animation: slideInTab 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes slideInTab {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
 }

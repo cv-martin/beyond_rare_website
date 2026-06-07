@@ -17,7 +17,7 @@ const defaultPosts = [
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=60',
     groupId: 'caregivers',
     groupName: 'Caregivers and Allies',
-    content: 'Very good insight',
+    content: 'Very good insight into our daily experiences. #CaregiverLife',
     timestamp: '2026-06-05T14:30:00Z',
     likes: 2,
     comments: [
@@ -27,10 +27,10 @@ const defaultPosts = [
   {
     id: 2,
     author: 'Aashriya Vasamsetti',
-    avatar: '/images/logo.avif',
+    avatar: '/beyond_rare_website/images/logo.avif',
     groupId: 'caregivers',
     groupName: 'Caregivers and Allies',
-    content: 'Welcome to our group Caregivers and Allies! Watching and helping someone with a rare disease can be worrisome and heartbreaking sometimes. Here you are free to express your concerns or need for support for your loved one with a rare disease freely and receive care from those who are facing or have faced similar experiences 💚',
+    content: 'Welcome to our group Caregivers and Allies! Watching and helping someone with a rare disease can be worrisome and heartbreaking sometimes. Here you are free to express your concerns or need for support for your loved one with a rare disease freely and receive care from those who are facing or have faced similar experiences 💚 #CaregiverLife #ChronicIllness',
     timestamp: '2026-06-04T09:00:00Z',
     likes: 8,
     comments: []
@@ -38,10 +38,10 @@ const defaultPosts = [
   {
     id: 3,
     author: 'Aashriya Vasamsetti',
-    avatar: '/images/logo.avif',
+    avatar: '/beyond_rare_website/images/logo.avif',
     groupId: 'stories',
     groupName: 'Rare Disease Stories',
-    content: 'Welcome to our group Rare Disease Stories! Here our safe space to discuss our personal experiences with a rare disease, concerns with living with one, and success stories while building a sense of inclusivity so we don\'t feel isolated in our world with a rare disease. Post now and explore the connections and relief you could find ❤️',
+    content: 'Welcome to our group Rare Disease Stories! Here our safe space to discuss our personal experiences with a rare disease, concerns with living with one, and success stories while building a sense of inclusivity so we don\'t feel isolated in our world with a rare disease. Post now and explore the connections and relief you could find ❤️ #RareDiseaseWarrior',
     timestamp: '2026-06-03T10:15:00Z',
     likes: 12,
     comments: []
@@ -49,10 +49,10 @@ const defaultPosts = [
   {
     id: 4,
     author: 'Aashriya Vasamsetti',
-    avatar: '/images/logo.avif',
+    avatar: '/beyond_rare_website/images/logo.avif',
     groupId: 'community',
     groupName: 'General Community',
-    content: 'Welcome to our group General Community! Explore latest events, celebrations, news, etc, and connect with those of various diseases and those in relation. Start by posting your thoughts, sharing media, or creating a poll.',
+    content: 'Welcome to our group General Community! Explore latest events, celebrations, news, etc, and connect with those of various diseases and those in relation. Start by posting your thoughts, sharing media, or creating a poll. #AdvocacyWins',
     timestamp: '2026-06-02T11:00:00Z',
     likes: 5,
     comments: []
@@ -71,12 +71,18 @@ export function AppProvider({ children }) {
   useEffect(() => {
     const storedUser = localStorage.getItem('br_user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser.avatar === '/images/logo.avif') parsedUser.avatar = '/beyond_rare_website/images/logo.avif';
+      setUser(parsedUser);
     }
 
     const storedPosts = localStorage.getItem('br_posts');
     if (storedPosts) {
-      setPosts(JSON.parse(storedPosts));
+      const parsedPosts = JSON.parse(storedPosts).map(p => ({
+        ...p,
+        avatar: p.avatar === '/images/logo.avif' ? '/beyond_rare_website/images/logo.avif' : p.avatar
+      }));
+      setPosts(parsedPosts);
     } else {
       setPosts(defaultPosts);
       localStorage.setItem('br_posts', JSON.stringify(defaultPosts));
@@ -93,7 +99,7 @@ export function AppProvider({ children }) {
     const newUser = {
       name: name || email.split('@')[0],
       email,
-      avatar: '/images/logo.avif'
+      avatar: '/beyond_rare_website/images/logo.avif'
     };
     setUser(newUser);
     localStorage.setItem('br_user', JSON.stringify(newUser));
