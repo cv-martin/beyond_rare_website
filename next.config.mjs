@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  output: 'export',
+  basePath: '/beyond_rare_website',
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
