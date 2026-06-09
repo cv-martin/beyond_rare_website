@@ -144,7 +144,7 @@ export default function Home() {
                 Educational rare disease directory and news center
               </h3>
               <p className="text-xs text-brand-green-dark/90 leading-relaxed max-w-sm">
-                With over 7,000 known rare diseases in the US alone, finding the latest information can be difficult sometimes. Our website's easy access to the most up to date resources ensures your search for information is quick and simple.
+                With over 7,000 known rare diseases in the US alone, finding the latest information can be difficult sometimes. Our website&apos;s easy access to the most up to date resources ensures your search for information is quick and simple.
               </p>
             </div>
 
@@ -174,7 +174,7 @@ export default function Home() {
                 Distinct advocacy, fundraising, and policy initiatives
               </h3>
               <p className="text-xs text-brand-green-dark/90 leading-relaxed max-w-sm">
-                Designed by one rare disease patient for another, our special advocacies are tailored to bring our community's real experiences to light and design a better world for all.
+                Designed by one rare disease patient for another, our special advocacies are tailored to bring our community&apos;s real experiences to light and design a better world for all.
               </p>
             </div>
           </div>
