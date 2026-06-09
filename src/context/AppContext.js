@@ -27,7 +27,7 @@ const defaultPosts = [
   {
     id: 2,
     author: 'Aashriya Vasamsetti',
-    avatar: '/beyond_rare_website/images/logo.avif',
+    avatar: '/images/logo.avif',
     groupId: 'caregivers',
     groupName: 'Caregivers and Allies',
     content: 'Welcome to our group Caregivers and Allies! Watching and helping someone with a rare disease can be worrisome and heartbreaking sometimes. Here you are free to express your concerns or need for support for your loved one with a rare disease freely and receive care from those who are facing or have faced similar experiences 💚 #CaregiverLife #ChronicIllness',
@@ -38,7 +38,7 @@ const defaultPosts = [
   {
     id: 3,
     author: 'Aashriya Vasamsetti',
-    avatar: '/beyond_rare_website/images/logo.avif',
+    avatar: '/images/logo.avif',
     groupId: 'stories',
     groupName: 'Rare Disease Stories',
     content: 'Welcome to our group Rare Disease Stories! Here our safe space to discuss our personal experiences with a rare disease, concerns with living with one, and success stories while building a sense of inclusivity so we don\'t feel isolated in our world with a rare disease. Post now and explore the connections and relief you could find ❤️ #RareDiseaseWarrior',
@@ -49,7 +49,7 @@ const defaultPosts = [
   {
     id: 4,
     author: 'Aashriya Vasamsetti',
-    avatar: '/beyond_rare_website/images/logo.avif',
+    avatar: '/images/logo.avif',
     groupId: 'community',
     groupName: 'General Community',
     content: 'Welcome to our group General Community! Explore latest events, celebrations, news, etc, and connect with those of various diseases and those in relation. Start by posting your thoughts, sharing media, or creating a poll. #AdvocacyWins',
@@ -66,13 +66,16 @@ export function AppProvider({ children }) {
   const [joinedGroups, setJoinedGroups] = useState(['caregivers']); // Default joined group
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
+  const [registeredUsers, setRegisteredUsers] = useState([]);
 
   // Load from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('br_user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      if (parsedUser.avatar === '/images/logo.avif') parsedUser.avatar = '/beyond_rare_website/images/logo.avif';
+      if (parsedUser.avatar && parsedUser.avatar.startsWith('/beyond_rare_website')) {
+        parsedUser.avatar = parsedUser.avatar.replace('/beyond_rare_website', '');
+      }
       setUser(parsedUser);
     }
 
@@ -80,7 +83,7 @@ export function AppProvider({ children }) {
     if (storedPosts) {
       const parsedPosts = JSON.parse(storedPosts).map(p => ({
         ...p,
-        avatar: p.avatar === '/images/logo.avif' ? '/beyond_rare_website/images/logo.avif' : p.avatar
+        avatar: p.avatar && p.avatar.startsWith('/beyond_rare_website') ? p.avatar.replace('/beyond_rare_website', '') : p.avatar
       }));
       setPosts(parsedPosts);
     } else {
@@ -92,18 +95,54 @@ export function AppProvider({ children }) {
     if (storedJoinedGroups) {
       setJoinedGroups(JSON.parse(storedJoinedGroups));
     }
+
+    const storedUsers = localStorage.getItem('br_registered_users');
+    let usersList = [];
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers).map(u => ({
+        ...u,
+        avatar: u.avatar && u.avatar.startsWith('/beyond_rare_website') ? u.avatar.replace('/beyond_rare_website', '') : u.avatar
+      }));
+    } else {
+      usersList = [
+        {
+          email: 'aashriya@beyondrare.org',
+          name: 'Aashriya Vasamsetti',
+          password: 'password123',
+          avatar: '/images/logo.avif',
+          role: 'Founder & Patient',
+          bio: 'Founder of Beyond Rare. Living with McCune-Albright Syndrome. Working to make sure rare disease patients feel more supported, represented, and seen.',
+          joinDate: 'June 2026'
+        },
+        {
+          email: 'martin@beyondrare.org',
+          name: 'Martin Intilt',
+          password: 'password123',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=60',
+          role: 'Caregiver',
+          bio: 'Caregiver and advocate for my brother. Believer in community strength.',
+          joinDate: 'June 2026'
+        }
+      ];
+      localStorage.setItem('br_registered_users', JSON.stringify(usersList));
+    }
+    setRegisteredUsers(usersList);
   }, []);
 
   // Sync state helpers
-  const login = (email, name) => {
-    const newUser = {
-      name: name || email.split('@')[0],
-      email,
-      avatar: '/beyond_rare_website/images/logo.avif'
-    };
-    setUser(newUser);
-    localStorage.setItem('br_user', JSON.stringify(newUser));
+  const login = (email, password) => {
+    const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
+    const foundUser = storedUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!foundUser) {
+      return { success: false, error: 'User does not exist. Please sign up.' };
+    }
+    if (foundUser.password !== password) {
+      return { success: false, error: 'Incorrect password. Please try again.' };
+    }
+    setUser(foundUser);
+    localStorage.setItem('br_user', JSON.stringify(foundUser));
     setIsAuthModalOpen(false);
+    return { success: true };
   };
 
   const logout = () => {
@@ -111,8 +150,98 @@ export function AppProvider({ children }) {
     localStorage.removeItem('br_user');
   };
 
-  const register = (email, name) => {
-    login(email, name);
+  const register = (email, name, password, role = 'Supporter') => {
+    const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
+    const exists = storedUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
+    if (exists) {
+      return { success: false, error: 'Email already registered. Please log in.' };
+    }
+
+    const newUser = {
+      email,
+      name,
+      password,
+      avatar: '/images/logo.avif',
+      role,
+      bio: '',
+      joinDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    };
+
+    const updatedUsers = [...storedUsers, newUser];
+    localStorage.setItem('br_registered_users', JSON.stringify(updatedUsers));
+    setRegisteredUsers(updatedUsers);
+
+    setUser(newUser);
+    localStorage.setItem('br_user', JSON.stringify(newUser));
+    setIsAuthModalOpen(false);
+    return { success: true };
+  };
+
+  const updateProfile = (updatedData) => {
+    if (!user) return { success: false, error: 'No active user session.' };
+
+    const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
+    const userIndex = storedUsers.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
+    if (userIndex === -1) {
+      return { success: false, error: 'User not found in registry.' };
+    }
+
+    const previousName = user.name;
+    const updatedUser = {
+      ...storedUsers[userIndex],
+      ...updatedData
+    };
+
+    storedUsers[userIndex] = updatedUser;
+    localStorage.setItem('br_registered_users', JSON.stringify(storedUsers));
+    setRegisteredUsers(storedUsers);
+
+    setUser(updatedUser);
+    localStorage.setItem('br_user', JSON.stringify(updatedUser));
+
+    // Sync post/comment names and avatars
+    const storedPosts = JSON.parse(localStorage.getItem('br_posts') || '[]');
+    let postsChanged = false;
+    const updatedPosts = (storedPosts.length > 0 ? storedPosts : posts).map(post => {
+      let postModified = false;
+      let newPost = { ...post };
+
+      if (post.author === previousName) {
+        newPost.author = updatedUser.name;
+        newPost.avatar = updatedUser.avatar;
+        postModified = true;
+      }
+
+      if (post.comments && post.comments.length > 0) {
+        const updatedComments = post.comments.map(comment => {
+          if (comment.author === previousName) {
+            return {
+              ...comment,
+              author: updatedUser.name
+            };
+          }
+          return comment;
+        });
+
+        const commentChanged = JSON.stringify(post.comments) !== JSON.stringify(updatedComments);
+        if (commentChanged) {
+          newPost.comments = updatedComments;
+          postModified = true;
+        }
+      }
+
+      if (postModified) {
+        postsChanged = true;
+      }
+      return newPost;
+    });
+
+    if (postsChanged) {
+      setPosts(updatedPosts);
+      localStorage.setItem('br_posts', JSON.stringify(updatedPosts));
+    }
+
+    return { success: true };
   };
 
   const toggleJoinGroup = (groupId) => {
@@ -199,6 +328,7 @@ export function AppProvider({ children }) {
         login,
         logout,
         register,
+        updateProfile,
         toggleJoinGroup,
         createPost,
         toggleLikePost,

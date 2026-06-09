@@ -48,7 +48,7 @@ export default function Home() {
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-20 pb-20"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundImage: 'url(/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -87,6 +87,7 @@ export default function Home() {
           <div className="flex justify-center pt-1">
             <button
               onClick={scrollToMission}
+              data-cta="learn_more"
               className="px-14 py-3.5 text-base font-extrabold text-brand-green-dark bg-brand-green-light hover:bg-brand-green-light/90 border border-brand-green/15 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
             >
               Learn more
@@ -100,7 +101,7 @@ export default function Home() {
         id="mission"
         className="relative pt-10 pb-6 px-6 md:px-12 scroll-mt-20 overflow-hidden bg-brand-green-light"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundImage: 'url(/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -182,6 +183,7 @@ export default function Home() {
           <div className="text-center pt-3">
             <Link
               href="/your-story"
+              data-cta="connect_now"
               className="inline-block px-12 py-3 text-sm font-bold text-white bg-brand-green hover:bg-brand-green-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
             >
               Connect Now
@@ -194,7 +196,7 @@ export default function Home() {
       <section
         className="relative overflow-hidden"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/home_story_bg.png)',
+          backgroundImage: 'url(/images/home_story_bg.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -225,7 +227,7 @@ export default function Home() {
                 style={{ boxShadow: '0 0 30px rgba(139,127,184,0.5), 0 0 70px rgba(139,127,184,0.2)' }}
               >
                 <img
-                  src="/beyond_rare_website/images/logo.avif"
+                  src="/images/logo.avif"
                   alt="Aashriya Vasamsetti — Founder"
                   className="w-full h-full object-cover"
                 />
@@ -325,6 +327,7 @@ export default function Home() {
             {user ? (
               <Link
                 href="/your-story"
+                data-cta="go_to_groups"
                 className="inline-block px-12 py-3 text-sm font-extrabold text-white bg-brand-purple hover:bg-brand-purple-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
               >
                 Go to Groups Feed
@@ -332,6 +335,7 @@ export default function Home() {
             ) : (
               <button
                 onClick={handleJoinClick}
+                data-cta="join_now"
                 className="px-12 py-3 text-sm font-extrabold text-white bg-brand-purple hover:bg-brand-purple-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
               >
                 Join Now

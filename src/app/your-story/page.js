@@ -161,7 +161,7 @@ export default function YourStory() {
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundImage: 'url(/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -201,7 +201,7 @@ export default function YourStory() {
       <section
         className="relative pt-10 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundImage: 'url(/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -334,6 +334,7 @@ export default function YourStory() {
                     </div>
                     <textarea
                       id="new-post-content"
+                      data-clarity-mask="true"
                       value={newPostContent}
                       onChange={(e) => setNewPostContent(e.target.value)}
                       placeholder={
@@ -350,6 +351,7 @@ export default function YourStory() {
                     </p>
                     <button
                       type="submit"
+                      data-cta="publish_post"
                       className="px-6 py-2.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full text-xs shadow-sm hover:shadow transition duration-200"
                     >
                       Publish Post
@@ -364,6 +366,7 @@ export default function YourStory() {
                       setAuthMode('login');
                       setIsAuthModalOpen(true);
                     }}
+                    data-cta="login_start_posting"
                     className="px-6 py-2.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full text-xs shadow-sm hover:shadow transition duration-200"
                   >
                     Log In & Start Posting
@@ -383,7 +386,7 @@ export default function YourStory() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-full border-2 border-white/50 bg-white shadow-sm shrink-0 overflow-hidden flex items-center justify-center">
-                            <img src={post.avatar || '/beyond_rare_website/images/logo.avif'} alt={post.author} className="w-full h-full object-contain rounded-full" />
+                            <img src={post.avatar || '/images/logo.avif'} alt={post.author} className="w-full h-full object-contain rounded-full" />
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -461,6 +464,7 @@ export default function YourStory() {
                             >
                               <input
                                 type="text"
+                                data-clarity-mask="true"
                                 value={commentInputs[post.id] || ''}
                                 onChange={(e) =>
                                   setCommentInputs(prev => ({ ...prev, [post.id]: e.target.value }))
@@ -470,6 +474,7 @@ export default function YourStory() {
                               />
                               <button
                                 type="submit"
+                                data-cta="submit_comment"
                                 className="px-5 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg text-xs font-extrabold shadow-sm hover:shadow transition"
                               >
                                 Post
@@ -507,7 +512,7 @@ export default function YourStory() {
             {/* Card 1: Trending Hashtags */}
             <div className="glass-panel rounded-2xl p-5">
               <h2 className="text-base font-extrabold text-brand-purple-dark font-display mb-3 flex items-center gap-2">
-                <span>⚡ What's Happening</span>
+                <span>⚡ What&apos;s Happening</span>
               </h2>
               <div className="space-y-3">
                 {trendingHashtags.map(({ tag, posts: count }) => {
@@ -605,6 +610,7 @@ export default function YourStory() {
                       <button
                         key={key}
                         onClick={() => handleVote(key)}
+                        data-cta="vote_poll"
                         className="w-full text-left p-2.5 rounded-xl border border-white/50 bg-white/40 hover:bg-brand-purple/10 hover:border-brand-purple/30 text-xs font-bold text-gray-700 transition duration-200"
                       >
                         {label}
@@ -621,7 +627,7 @@ export default function YourStory() {
                 🌟 Community Voice
               </h3>
               <p className="text-xs font-medium italic text-gray-700 leading-relaxed">
-                "Though our conditions are rare, our collective voices form a powerful chorus of strength and progress."
+                &quot;Though our conditions are rare, our collective voices form a powerful chorus of strength and progress.&quot;
               </p>
               <p className="text-[10px] font-extrabold text-brand-purple-dark mt-2">
                 — Elena R., Advocate
@@ -635,7 +641,7 @@ export default function YourStory() {
       <section
         className="relative overflow-hidden py-20 px-6 md:px-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/your_story_cta_bg.png)',
+          backgroundImage: 'url(/images/your_story_cta_bg.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -689,12 +695,14 @@ export default function YourStory() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              data-cta="post_your_story_bottom"
               className="px-10 py-3.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
             >
               Post Your Story ↑
             </button>
             <a
-              href="/beyond_rare_website/blog"
+              href="/blog"
+              data-cta="explore_community_bottom"
               className="px-10 py-3.5 rounded-full font-extrabold text-sm text-white/90 hover:text-white transition-all duration-300"
               style={{ border: '1px solid rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
             >

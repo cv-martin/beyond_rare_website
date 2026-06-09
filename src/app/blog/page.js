@@ -41,19 +41,19 @@ export default function Blog() {
 
   const leftSlides = [
     {
-      image: "/beyond_rare_website/images/Neuronal Death, A Work in Progress - Mary Porter.avif",
+      image: "/images/Neuronal Death, A Work in Progress - Mary Porter.avif",
       title: '"Neuronal Death, A Work in Progress"',
       artist: "Mary Porter",
       desc: "A stunning watercolor and ink exploration of the human nervous system, highlighting brain cells under stress."
     },
     {
-      image: "/beyond_rare_website/images/2.avif",
+      image: "/images/2.avif",
       title: '"Fragments of Connection"',
       artist: "Community Collaboration",
       desc: "An abstract canvas demonstrating how individuals across separate rare conditions share common threads of experience."
     },
     {
-      image: "/beyond_rare_website/images/6.avif",
+      image: "/images/6.avif",
       title: '"Resiliency in Bloom"',
       artist: "Mary Porter",
       desc: "An organic representation of rare mutations branching into forms of natural growth and cellular adaptation."
@@ -62,19 +62,19 @@ export default function Blog() {
 
   const rightSlides = [
     {
-      image: "/beyond_rare_website/images/self.avif",
+      image: "/images/self.avif",
       title: '"Self Portrait"',
       artist: "Gems Godfrey",
       desc: "A poignant black and white photographic study exploring isolated figures and spatial distance."
     },
     {
-      image: "/beyond_rare_website/images/5.avif",
+      image: "/images/5.avif",
       title: '"Gene Editing, Visualization"',
       artist: "Gems Godfrey",
       desc: "Visual expression of double-helix structures crossing paths, merging molecular biology with organic lines."
     },
     {
-      image: "/beyond_rare_website/images/2.avif",
+      image: "/images/2.avif",
       title: '"Microscopic Colors"',
       artist: "Alex Chen",
       desc: "A vibrant illustration of genetic patterns and cell dividing sequences under high contrast."
@@ -103,7 +103,7 @@ export default function Blog() {
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundImage: 'url(/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -124,7 +124,7 @@ export default function Blog() {
       <section
         className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundImage: 'url(/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -228,7 +228,7 @@ export default function Blog() {
               <div
                 className="relative overflow-hidden rounded-3xl min-h-[400px] flex flex-col justify-between"
                 style={{
-                  backgroundImage: 'url(/beyond_rare_website/images/blog_advocacy_bg.png)',
+                  backgroundImage: 'url(/images/blog_advocacy_bg.png)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',

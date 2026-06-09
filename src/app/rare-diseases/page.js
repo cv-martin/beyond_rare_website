@@ -19,7 +19,7 @@ export default function RareDiseases() {
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundImage: 'url(/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -38,12 +38,14 @@ export default function RareDiseases() {
           <div className="flex flex-wrap items-center justify-center gap-4 pt-6">
             <button
               onClick={() => scrollToSection('glossary')}
+              data-cta="scroll_to_glossary"
               className="px-8 py-3 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full text-sm shadow-sm hover:shadow transition duration-200"
             >
               Rare Disease Glossary
             </button>
             <button
               onClick={() => scrollToSection('news')}
+              data-cta="scroll_to_news"
               className="px-8 py-3 bg-brand-green hover:bg-brand-green-dark text-white font-extrabold rounded-full text-sm shadow-sm hover:shadow transition duration-200"
             >
               News & Current Events
@@ -56,7 +58,7 @@ export default function RareDiseases() {
       <section
         className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundImage: 'url(/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -83,6 +85,7 @@ export default function RareDiseases() {
                   href="https://rarediseases.org/rare-diseases/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-cta="open_nord_glossary"
                   className="inline-flex items-center gap-1 text-sm font-extrabold text-brand-purple hover:text-brand-purple-dark hover:underline shrink-0 transition"
                 >
                   <span>Open in new tab</span>
@@ -130,6 +133,7 @@ export default function RareDiseases() {
                   href="https://globalgenes.org/rare-daily/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-cta="open_global_genes_news"
                   className="inline-flex items-center gap-1 text-sm font-extrabold text-brand-green hover:text-brand-green-dark hover:underline shrink-0 transition"
                 >
                   <span>Open in new tab</span>
@@ -164,7 +168,7 @@ export default function RareDiseases() {
       <section
         className="relative overflow-hidden py-20 px-6 md:px-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/rare_diseases_stats_bg.png)',
+          backgroundImage: 'url(/images/rare_diseases_stats_bg.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -251,7 +255,8 @@ export default function RareDiseases() {
               Knowledge is the first step. Community is the next.
             </p>
             <a
-              href="/beyond_rare_website/your-story"
+              href="/your-story"
+              data-cta="join_our_community"
               className="inline-block px-10 py-3.5 bg-brand-purple hover:bg-brand-purple-dark text-white font-extrabold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
             >
               Join Our Community →

@@ -11,6 +11,7 @@ export default function Header() {
   const { user, setIsAuthModalOpen, setAuthMode, logout } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ export default function Header() {
           {/* Logo and Title */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative w-16 h-16 flex items-center justify-center p-0.5 bg-white rounded-full shadow-inner group-hover:scale-105 transition duration-200">
-              <img src="/beyond_rare_website/images/logo.avif" alt="Beyond Rare logo" className="w-[85%] h-[85%] object-contain" />
+              <img src="/images/logo.avif" alt="Beyond Rare logo" className="w-[85%] h-[85%] object-contain" />
             </div>
             <span className="text-3xl md:text-4xl font-black tracking-wide text-brand-green-light font-display group-hover:text-white transition duration-200">
               Beyond Rare
@@ -90,25 +91,84 @@ export default function Header() {
 
             {/* Auth Controls */}
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 relative">
                 {/* Notification Bell */}
-                <button className="text-brand-cream hover:text-white transition">
+                <button className="text-brand-cream hover:text-white transition mr-1">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </button>
-                {/* Member Badge dropdown */}
-                <div className="flex items-center gap-1.5">
-                  <div className="w-8 h-8 rounded-full bg-brand-green flex items-center justify-center text-white font-bold text-sm border border-white/30 cursor-pointer">
-                    {user.name.charAt(0).toLowerCase()}
+
+                {/* User Dropdown Trigger */}
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center gap-2 focus:outline-none group relative z-50"
+                >
+                  <div className="w-9 h-9 rounded-full border-2 border-white/60 p-0.5 shrink-0 bg-white hover:scale-105 transition duration-200 shadow-md">
+                    <img
+                      src={user.avatar || '/images/logo.avif'}
+                      alt={user.name}
+                      className="w-full h-full object-cover rounded-full"
+                    />
                   </div>
-                  <button
-                    onClick={logout}
-                    className="text-xs font-semibold text-brand-cream hover:text-red-350 transition"
+                  <span className="text-sm font-bold text-brand-cream group-hover:text-white transition hidden lg:inline max-w-[110px] truncate">
+                    {user.name.split(' ')[0]}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-brand-cream group-hover:text-white transition duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    Log Out
-                  </button>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isUserMenuOpen && (
+                  <>
+                    {/* Backdrop to close menu */}
+                    <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsUserMenuOpen(false)} />
+                    <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl glass-panel border border-white/50 shadow-2xl p-2.5 animate-in fade-in slide-in-from-top-3 duration-250">
+                      {/* User Header */}
+                      <div className="px-3.5 py-3 border-b border-brand-purple/15">
+                        <p className="text-sm font-black text-brand-purple-dark truncate leading-none mb-1">{user.name}</p>
+                        <p className="text-[10px] font-bold text-brand-purple-dark/60 truncate leading-none">{user.email}</p>
+                      </div>
+                      
+                      {/* Menu Links */}
+                      <div className="py-2.5 space-y-1">
+                        <Link
+                          href="/profile"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-brand-purple-dark hover:bg-brand-purple/10 rounded-xl transition"
+                        >
+                          👤 View Profile
+                        </Link>
+                        <Link
+                          href="/your-story"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-brand-purple-dark hover:bg-brand-purple/10 rounded-xl transition"
+                        >
+                          👥 Forums & Feed
+                        </Link>
+                      </div>
+
+                      {/* Log Out */}
+                      <div className="pt-2 border-t border-brand-purple/15">
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="w-full text-left flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-red-650 hover:bg-red-50 rounded-xl transition"
+                        >
+                          🚪 Log Out
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <button
@@ -126,9 +186,16 @@ export default function Header() {
           {/* Mobile hamburger menu toggle */}
           <div className="flex md:hidden items-center gap-4">
             {user && (
-              <div className="w-8 h-8 rounded-full bg-brand-green flex items-center justify-center text-white font-bold text-sm">
-                {user.name.charAt(0).toLowerCase()}
-              </div>
+              <Link
+                href="/profile"
+                className="w-8 h-8 rounded-full border border-white/40 p-0.5 shrink-0 bg-white shadow-md"
+              >
+                <img
+                  src={user.avatar || '/images/logo.avif'}
+                  alt={user.name}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </Link>
             )}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -199,17 +266,46 @@ export default function Header() {
 
           {/* Auth Button in Mobile Menu */}
           {user ? (
-            <div className="flex flex-col gap-2 pt-2 border-t border-white/10">
-              <span className="px-3 text-sm text-brand-cream font-semibold truncate">Logged in as {user.name}</span>
-              <button
-                onClick={() => {
-                  logout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full py-2 px-4 text-center text-sm font-semibold border border-red-300 text-red-100 hover:bg-white/5 rounded-lg transition"
-              >
-                Log Out
-              </button>
+            <div className="flex flex-col gap-2 pt-2.5 border-t border-white/15">
+              <div className="flex items-center gap-3 px-3 py-1.5">
+                <div className="w-10 h-10 rounded-full border-2 border-white/60 p-0.5 shrink-0 bg-white shadow-md">
+                  <img
+                    src={user.avatar || '/images/logo.avif'}
+                    alt={user.name}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-black text-white truncate leading-tight">{user.name}</p>
+                  <p className="text-[10px] font-bold text-brand-cream/70 truncate">{user.email}</p>
+                </div>
+              </div>
+
+              <div className="space-y-1 mt-1">
+                <Link
+                  href="/profile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-cream hover:bg-white/10 hover:text-white transition"
+                >
+                  👤 My Profile
+                </Link>
+                <Link
+                  href="/your-story"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-cream hover:bg-white/10 hover:text-white transition"
+                >
+                  👥 Forums & Feed
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-extrabold text-red-200 hover:bg-red-950/20 transition mt-2 border border-red-500/25"
+                >
+                  🚪 Log Out
+                </button>
+              </div>
             </div>
           ) : (
             <button
@@ -228,4 +324,3 @@ export default function Header() {
     </header>
   );
 }
-

@@ -4,6 +4,9 @@ import { AppProvider } from "@/context/AppContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthModal from "@/components/AuthModal";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
+import CookieConsent from "@/components/CookieConsent";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -45,7 +48,10 @@ export default function RootLayout({ children }) {
           <main className="flex-grow flex flex-col">{children}</main>
           <Footer />
           <AuthModal />
+          <AnalyticsTracker />
+          <CookieConsent />
         </AppProvider>
+        <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
       </body>
     </html>
   );

@@ -118,11 +118,11 @@ body {
 }
 
 .story-panel-left::before {
-  background-image: url('/beyond_rare_website/images/1.avif');
+  background-image: url('/images/1.avif');
 }
 
 .story-panel-right::before {
-  background-image: url('/beyond_rare_website/images/2.avif');
+  background-image: url('/images/2.avif');
 }
 
 /* Floating decorative blobs */

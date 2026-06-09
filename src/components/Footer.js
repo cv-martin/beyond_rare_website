@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -18,6 +19,12 @@ export default function Footer() {
           {/* Contact Details */}
           <div className="flex flex-col items-center md:items-start space-y-2">
             <h4 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Contact Us</h4>
+            <Link
+              href="/contact"
+              className="text-sm text-gray-400 hover:text-brand-green transition duration-150 font-bold"
+            >
+              ✉️ Send us a message
+            </Link>
             <a
               href="mailto:beyondrare25@gmail.com"
               className="text-sm text-gray-400 hover:text-brand-green transition duration-150"

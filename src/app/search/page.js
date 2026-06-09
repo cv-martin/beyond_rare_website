@@ -84,7 +84,7 @@ function SearchResultsContent() {
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/5.avif)',
+          backgroundImage: 'url(/images/5.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
@@ -111,7 +111,7 @@ function SearchResultsContent() {
       <section
         className="relative pt-8 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow"
         style={{
-          backgroundImage: 'url(/beyond_rare_website/images/4.avif)',
+          backgroundImage: 'url(/images/4.avif)',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
