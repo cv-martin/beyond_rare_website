@@ -100,10 +100,14 @@ export default function Blog() {
   return (
     <div className="flex flex-col w-full overflow-hidden bg-brand-cream page-switch-enter">
       {/* SECTION 1: Hero Banner */}
-      <section
-        className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
-      >
-        <div className="max-w-4xl mx-auto w-full text-center space-y-4">
+      <section className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12 overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+          <div className="absolute top-12 -right-12 w-80 h-80 bg-brand-green/10 rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto w-full text-center space-y-4 relative z-10">
           <h1 className="text-4xl md:text-5xl font-extrabold font-display leading-snug text-brand-purple-dark">
             Our Community
           </h1>
@@ -115,48 +119,76 @@ export default function Blog() {
       </section>
 
       {/* SECTION 2: Main Content Feed */}
-      <section
-        className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow"
-      >
+      <section className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow overflow-hidden">
+        
+        {/* Dynamic Abstract Background Blobs to fill empty space */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Top Left Blob */}
+          <div className="absolute top-[10%] -left-32 w-[500px] h-[500px] bg-brand-green/20 rounded-full blur-[100px] mix-blend-multiply opacity-70 animate-pulse-slow"></div>
+          
+          {/* Middle Right Blob */}
+          <div className="absolute top-[40%] -right-32 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[120px] mix-blend-multiply opacity-50"></div>
+          
+          {/* Bottom Left Blob */}
+          <div className="absolute bottom-[10%] -left-48 w-[700px] h-[700px] bg-blue-200/30 rounded-full blur-[130px] mix-blend-multiply opacity-60"></div>
+          
+          {/* Subtle Grid Pattern overlay */}
+          <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-[0.03]"></div>
+        </div>
+
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
           
           {/* Navigation Sidebar Box */}
-          <aside className="lg:col-span-3 lg:sticky lg:top-32 z-20">
-            <div className="glass-panel border-2 border-white/60 rounded-2xl p-5 shadow-sm space-y-4">
-              <h3 className="text-xs font-black uppercase tracking-widest text-brand-purple-dark/60">Navigation</h3>
-              <nav className="flex flex-col gap-2">
+          <aside className="lg:col-span-3 lg:sticky lg:top-32 z-20 hidden lg:block">
+            <div className="glass-panel border-2 border-white/60 rounded-3xl p-6 shadow-xl shadow-brand-purple/5 space-y-6 backdrop-blur-xl bg-white/40">
+              <div className="space-y-1">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-brand-purple-dark/40">Quick Menu</h3>
+                <h2 className="text-lg font-black text-brand-purple-dark font-display">Navigation</h2>
+              </div>
+              <nav className="flex flex-col gap-2 relative">
+                {/* Decorative vertical line */}
+                <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-brand-purple/10 rounded-full z-0"></div>
+                
                 <button
                   onClick={() => scrollToSection('blog-feed')}
-                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
+                  className="relative z-10 flex items-center gap-3 w-full text-left px-4 py-3 text-sm font-extrabold rounded-xl text-brand-purple-dark/70 hover:bg-white hover:text-brand-purple hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
                 >
-                  📝 Rare Insights Blog
+                  <span className="text-lg">📝</span> Rare Insights
                 </button>
                 <button
                   onClick={() => scrollToSection('advocacy')}
-                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
+                  className="relative z-10 flex items-center gap-3 w-full text-left px-4 py-3 text-sm font-extrabold rounded-xl text-brand-purple-dark/70 hover:bg-white hover:text-brand-purple hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
                 >
-                  📢 Our Advocacy
+                  <span className="text-lg">📢</span> Our Advocacy
                 </button>
                 <button
                   onClick={() => scrollToSection('art-showcase')}
-                  className="w-full text-left px-3 py-2 text-sm font-extrabold rounded-lg text-brand-purple-dark/80 hover:bg-white hover:text-brand-purple transition duration-150 cursor-pointer"
+                  className="relative z-10 flex items-center gap-3 w-full text-left px-4 py-3 text-sm font-extrabold rounded-xl text-brand-purple-dark/70 hover:bg-white hover:text-brand-purple hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
                 >
-                  🎨 Art Showcase
+                  <span className="text-lg">🎨</span> Art Showcase
                 </button>
               </nav>
+            </div>
+            
+            {/* Additional Decorative Sidebar Element */}
+            <div className="mt-6 glass-panel border border-white/40 rounded-3xl p-6 backdrop-blur-xl bg-gradient-to-br from-brand-purple/5 to-transparent shadow-sm">
+              <h4 className="text-xs font-black uppercase tracking-widest text-brand-purple-dark/60 mb-2">Did You Know?</h4>
+              <p className="text-xs font-semibold text-brand-purple-dark/70 leading-relaxed">
+                By participating in our community events, you help fund new research grants for rare disease therapies.
+              </p>
             </div>
           </aside>
 
           {/* Content Area */}
-          <main className="lg:col-span-9 space-y-16">
+          <main className="lg:col-span-9 space-y-16 lg:pl-4">
             
             {/* Section 1: Blog */}
             <section id="blog-feed" className="scroll-mt-32 space-y-6">
-              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
-                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
-                  <span className="text-3xl">📝</span> Rare Insights Blog
+              <div className="glass-panel border-2 border-white/60 p-8 rounded-3xl mb-8 shadow-sm bg-white/40 backdrop-blur-xl">
+                <h2 className="text-3xl font-black text-brand-purple-dark font-display flex items-center gap-3">
+                  <span className="text-4xl">📝</span> Rare Insights Blog
                 </h2>
-                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">Read the many unique stories of our community</p>
+                <p className="text-base font-bold text-brand-purple-dark/70 mt-2">Read the many unique stories of our community</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -205,11 +237,11 @@ export default function Blog() {
 
             {/* Section 2: Advocacy */}
             <section id="advocacy" className="scroll-mt-32 space-y-6">
-              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
-                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
-                  <span className="text-3xl">📢</span> Our Advocacy
+              <div className="glass-panel border-2 border-white/60 p-8 rounded-3xl mb-8 shadow-sm bg-white/40 backdrop-blur-xl">
+                <h2 className="text-3xl font-black text-brand-purple-dark font-display flex items-center gap-3">
+                  <span className="text-4xl">📢</span> Our Advocacy
                 </h2>
-                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">View our community events to build connection and spread awareness</p>
+                <p className="text-base font-bold text-brand-purple-dark/70 mt-2">View our community events to build connection and spread awareness</p>
               </div>
 
               {/* Futuristic immersive advocacy banner */}
@@ -279,11 +311,11 @@ export default function Blog() {
 
             {/* Section 3: Art */}
             <section id="art-showcase" className="scroll-mt-32 space-y-6">
-              <div className="glass-panel border-2 border-white/60 p-6 rounded-2xl mb-6">
-                <h2 className="text-2xl font-black text-brand-purple-dark font-display flex items-center gap-2">
-                  <span className="text-3xl">🎨</span> Art Showcase
+              <div className="glass-panel border-2 border-white/60 p-8 rounded-3xl mb-8 shadow-sm bg-white/40 backdrop-blur-xl">
+                <h2 className="text-3xl font-black text-brand-purple-dark font-display flex items-center gap-3">
+                  <span className="text-4xl">🎨</span> Art Showcase
                 </h2>
-                <p className="text-sm font-bold text-brand-purple-dark/70 mt-1">Celebrating our community's unique artistry and expression</p>
+                <p className="text-base font-bold text-brand-purple-dark/70 mt-2">Celebrating our community's unique artistry and expression</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
