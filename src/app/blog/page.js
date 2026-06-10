@@ -102,12 +102,6 @@ export default function Blog() {
       {/* SECTION 1: Hero Banner */}
       <section
         className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-12"
-        style={{
-          backgroundImage: 'url(/images/5.avif)',
-          backgroundSize: '100% auto',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat',
-        }}
       >
         <div className="max-w-4xl mx-auto w-full text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-extrabold font-display leading-snug text-brand-purple-dark">
@@ -123,12 +117,6 @@ export default function Blog() {
       {/* SECTION 2: Main Content Feed */}
       <section
         className="relative pt-12 pb-20 px-4 sm:px-6 md:px-12 bg-brand-green-light flex-grow"
-        style={{
-          backgroundImage: 'url(/images/4.avif)',
-          backgroundSize: '100% auto',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat',
-        }}
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
           
