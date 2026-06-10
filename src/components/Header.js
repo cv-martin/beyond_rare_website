@@ -47,7 +47,6 @@ export default function Header() {
             #2a1f5a 75%,
             #1a0f2e 100%
           );
-          position: relative;
           transition: box-shadow 0.35s ease, backdrop-filter 0.35s ease;
         }
         .header-root::before {

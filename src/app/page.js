@@ -46,15 +46,28 @@ export default function Home() {
     <div className="flex flex-col w-full overflow-hidden bg-brand-cream">
       {/* SECTION 1: Hero Banner */}
       <section
-        className="relative w-full bg-brand-cream px-6 md:px-12 lg:px-24 xl:px-32 pt-20 pb-20"
+        className="relative w-full overflow-hidden px-6 md:px-12 lg:px-24 xl:px-32 pt-16 pb-6"
         style={{
-          backgroundImage: 'url(/images/5.avif)',
-          backgroundSize: '100% auto',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat',
+          background: '#f5f2ee',
         }}
       >
-        <div className="max-w-5xl mx-auto w-full space-y-3 md:space-y-4">
+        {/* Background image — contained, not stretched */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/images/5.avif)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.55,
+          }}
+        />
+        {/* Subtle vignette so text stays readable */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse 90% 80% at 50% 30%, transparent 40%, rgba(245,242,238,0.55) 100%)'
+        }} />
+
+        <div className="relative z-10 max-w-5xl mx-auto w-full space-y-4 md:space-y-5">
           {/* Left Aligned Heading Row (NIH statement) */}
           <div className="max-w-xl md:max-w-2xl text-left">
             <h1 className="text-xl md:text-2xl lg:text-[32px] xl:text-[38px] font-extrabold font-display leading-snug text-brand-purple-dark drop-shadow-[0_1px_2px_rgba(106,95,158,0.15)]">
@@ -84,16 +97,31 @@ export default function Home() {
           </div>
 
           {/* Learn More Button */}
-          <div className="flex justify-center pt-1">
+          <div className="flex justify-center pt-4">
             <button
               onClick={scrollToMission}
               data-cta="learn_more"
-              className="px-14 py-3.5 text-base font-extrabold text-brand-green-dark bg-brand-green-light hover:bg-brand-green-light/90 border border-brand-green/15 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+              className="group relative px-14 py-3.5 text-base font-extrabold text-white rounded-full transition-all duration-300 hover:-translate-y-0.5"
+              style={{
+                background: 'linear-gradient(135deg, #6a5f9e 0%, #8b7fb8 50%, #6a5f9e 100%)',
+                backgroundSize: '200% auto',
+                boxShadow: '0 4px 20px rgba(106,95,158,0.45), 0 0 0 1px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.2)',
+              }}
             >
-              Learn more
+              <span className="relative z-10 flex items-center gap-2">
+                Learn more
+                <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
             </button>
           </div>
         </div>
+
+        {/* Bottom fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none" style={{
+          background: 'linear-gradient(to bottom, transparent, #d2e3d1)'
+        }} />
       </section>
 
       {/* SECTION 2: Our Mission */}
@@ -179,15 +207,18 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Connect Now Button */}
+          {/* Connect Now Button — scrolls to Join Now section below */}
           <div className="text-center pt-3">
-            <Link
-              href="/your-story"
+            <button
+              onClick={() => {
+                const el = document.getElementById('join-now');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
               data-cta="connect_now"
-              className="inline-block px-12 py-3 text-sm font-bold text-white bg-brand-green hover:bg-brand-green-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+              className="px-12 py-3 text-sm font-bold text-white bg-brand-green hover:bg-brand-green-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
             >
               Connect Now
-            </Link>
+            </button>
           </div>
         </div>
       </section>
@@ -310,7 +341,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 4: Connect Now Section */}
-      <section className="relative py-16 px-6 md:px-12 bg-brand-green-light overflow-hidden flex items-center justify-center text-center">
+      <section id="join-now" className="relative py-16 px-6 md:px-12 bg-brand-green-light overflow-hidden flex items-center justify-center text-center">
         {/* Giant CONNECT NOW watermark */}
         <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none opacity-[0.12]">
           <span className="text-[14vw] font-black tracking-widest text-brand-green-dark leading-none" style={{ textShadow: '0 2px 8px rgba(50, 74, 55, 0.08)' }}>
@@ -324,23 +355,13 @@ export default function Home() {
           </p>
 
           <div>
-            {user ? (
-              <Link
-                href="/your-story"
-                data-cta="go_to_groups"
-                className="inline-block px-12 py-3 text-sm font-extrabold text-white bg-brand-purple hover:bg-brand-purple-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-              >
-                Go to Groups Feed
-              </Link>
-            ) : (
-              <button
-                onClick={handleJoinClick}
-                data-cta="join_now"
-                className="px-12 py-3 text-sm font-extrabold text-white bg-brand-purple hover:bg-brand-purple-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-              >
-                Join Now
-              </button>
-            )}
+            <Link
+              href="/your-story"
+              data-cta="join_now"
+              className="inline-block px-12 py-3 text-sm font-extrabold text-white bg-brand-purple hover:bg-brand-purple-dark rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              Join Now
+            </Link>
           </div>
         </div>
       </section>
