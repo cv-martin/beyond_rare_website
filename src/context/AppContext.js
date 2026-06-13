@@ -68,6 +68,92 @@ export function AppProvider({ children }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
   const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [loadingFeed, setLoadingFeed] = useState(false);
+  const [feedError, setFeedError] = useState(null);
+
+  const fetchPostsFromSupabase = async () => {
+    try {
+      const { data: postsData, error: postsError } = await supabase
+        .from('posts')
+        .select(`
+          id,
+          group_id,
+          content,
+          created_at,
+          author_id,
+          profiles (
+            name,
+            avatar,
+            role
+          ),
+          post_likes (
+            user_id
+          ),
+          post_comments (
+            id,
+            post_id,
+            user_id,
+            content,
+            created_at,
+            profiles (
+              name,
+              avatar,
+              role
+            )
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (postsError) throw postsError;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserId = session?.user?.id;
+
+      const mappedPosts = (postsData || []).map(post => {
+        const authorProfile = post.profiles || {};
+        const groupInfo = initialGroups.find(g => g.id === post.group_id);
+        
+        const comments = (post.post_comments || []).map(comment => {
+          const commentProfile = comment.profiles || {};
+          return {
+            id: comment.id,
+            postId: comment.post_id,
+            author: commentProfile.name || 'Member',
+            avatar: commentProfile.avatar || '/images/logo.avif',
+            content: comment.content,
+            timestamp: comment.created_at,
+            userId: comment.user_id
+          };
+        }).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        const userLikes = post.post_likes || [];
+        const isLiked = currentUserId ? userLikes.some(like => like.user_id === currentUserId) : false;
+
+        return {
+          id: post.id,
+          author: authorProfile.name || 'Member',
+          avatar: authorProfile.avatar || '/images/logo.avif',
+          groupId: post.group_id,
+          groupName: groupInfo ? groupInfo.name : 'General Community',
+          content: post.content,
+          timestamp: post.created_at,
+          likes: userLikes.length,
+          isLiked: isLiked,
+          comments: comments,
+          authorId: post.author_id
+        };
+      });
+
+      setPosts(mappedPosts);
+      setFeedError(null);
+    } catch (err) {
+      console.error('Error fetching feed posts from Supabase:', err);
+      setFeedError(err.message || 'Failed to fetch community posts.');
+    } finally {
+      setLoadingFeed(false);
+    }
+  };
 
   const isSupabaseActive = () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -229,6 +315,9 @@ export function AppProvider({ children }) {
     setRegisteredUsers(usersList);
 
     if (isSupabaseActive()) {
+      setLoadingFeed(true);
+      fetchPostsFromSupabase();
+
       const initSession = async () => {
         try {
           const { data: { session } } = await supabase.auth.getSession();
@@ -255,6 +344,7 @@ export function AppProvider({ children }) {
           setUser(null);
           localStorage.removeItem('br_user');
         }
+        fetchPostsFromSupabase();
       });
 
       return () => {
@@ -503,61 +593,264 @@ export function AppProvider({ children }) {
     localStorage.setItem('br_joined_groups', JSON.stringify(updated));
   };
 
-  const createPost = (content, groupId) => {
-    if (!user) return;
-    const group = groups.find(g => g.id === groupId);
-    const newPost = {
-      id: Date.now(),
-      author: user.name,
-      avatar: user.avatar,
-      groupId,
-      groupName: group ? group.name : 'General Community',
-      content,
-      timestamp: new Date().toISOString(),
-      likes: 0,
-      comments: []
-    };
-    const updatedPosts = [newPost, ...posts];
-    setPosts(updatedPosts);
-    localStorage.setItem('br_posts', JSON.stringify(updatedPosts));
+  const createPost = async (content, groupId) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to create a post.');
+        }
+
+        const trimmedContent = content.trim();
+        if (trimmedContent.length < 1 || trimmedContent.length > 5000) {
+          throw new Error('Post content must be between 1 and 5000 characters.');
+        }
+
+        const { error } = await supabase
+          .from('posts')
+          .insert({
+            author_id: session.user.id,
+            group_id: groupId,
+            content: trimmedContent
+          });
+
+        if (error) throw error;
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Error creating post in Supabase:', err);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return { success: false, error: 'Supabase integration is offline. Cannot create posts.' };
   };
 
-  const toggleLikePost = (postId) => {
-    const updatedPosts = posts.map(post => {
-      if (post.id === postId) {
-        // Simple local toggle: since we don't have user IDs tracking likes, we just toggle increment/decrement
-        const isLiked = post.isLiked;
-        return {
-          ...post,
-          likes: isLiked ? post.likes - 1 : post.likes + 1,
-          isLiked: !isLiked
-        };
+  const toggleLikePost = async (postId) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to like posts.');
+        }
+
+        const { data: existingLike, error: checkError } = await supabase
+          .from('post_likes')
+          .select('id')
+          .eq('post_id', postId)
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+
+        if (checkError) throw checkError;
+
+        if (existingLike) {
+          const { error: deleteError } = await supabase
+            .from('post_likes')
+            .delete()
+            .eq('post_id', postId)
+            .eq('user_id', session.user.id);
+
+          if (deleteError) throw deleteError;
+        } else {
+          const { error: insertError } = await supabase
+            .from('post_likes')
+            .insert({
+              post_id: postId,
+              user_id: session.user.id
+            });
+
+          if (insertError) {
+            if (insertError.code === '23505') {
+              console.warn('Duplicate like detected and ignored.');
+            } else {
+              throw insertError;
+            }
+          }
+        }
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to toggle post like:', err);
+        return { success: false, error: err.message };
       }
-      return post;
-    });
-    setPosts(updatedPosts);
-    localStorage.setItem('br_posts', JSON.stringify(updatedPosts));
+    }
+
+    return { success: false, error: 'Supabase integration is offline. Cannot like posts.' };
   };
 
-  const addComment = (postId, commentText) => {
-    if (!user) return;
-    const updatedPosts = posts.map(post => {
-      if (post.id === postId) {
-        const newComment = {
-          id: Date.now(),
-          author: user.name,
-          content: commentText,
-          timestamp: new Date().toISOString()
-        };
-        return {
-          ...post,
-          comments: [...post.comments, newComment]
-        };
+  const addComment = async (postId, commentText) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to add a comment.');
+        }
+
+        const trimmedComment = commentText.trim();
+        if (trimmedComment.length < 1 || trimmedComment.length > 2000) {
+          throw new Error('Comment must be between 1 and 2000 characters.');
+        }
+
+        const { error } = await supabase
+          .from('post_comments')
+          .insert({
+            post_id: postId,
+            user_id: session.user.id,
+            content: trimmedComment
+          });
+
+        if (error) throw error;
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to add post comment:', err);
+        return { success: false, error: err.message };
       }
-      return post;
-    });
-    setPosts(updatedPosts);
-    localStorage.setItem('br_posts', JSON.stringify(updatedPosts));
+    }
+
+    return { success: false, error: 'Supabase integration is offline. Cannot add comments.' };
+  };
+
+  const updatePost = async (postId, content, groupId) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to edit a post.');
+        }
+
+        const trimmedContent = content.trim();
+        if (trimmedContent.length < 1 || trimmedContent.length > 5000) {
+          throw new Error('Post content must be between 1 and 5000 characters.');
+        }
+
+        const { data, error } = await supabase
+          .from('posts')
+          .update({
+            content: trimmedContent,
+            group_id: groupId
+          })
+          .eq('id', postId)
+          .eq('author_id', session.user.id)
+          .select();
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error('Unauthorized or post not found.');
+        }
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to update post:', err);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return { success: false, error: 'Supabase integration is offline.' };
+  };
+
+  const deletePost = async (postId) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to delete a post.');
+        }
+
+        const { data, error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', postId)
+          .eq('author_id', session.user.id)
+          .select();
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error('Unauthorized or post not found.');
+        }
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to delete post:', err);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return { success: false, error: 'Supabase integration is offline.' };
+  };
+
+  const updatePostComment = async (commentId, content) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to edit a comment.');
+        }
+
+        const trimmedContent = content.trim();
+        if (trimmedContent.length < 1 || trimmedContent.length > 2000) {
+          throw new Error('Comment content must be between 1 and 2000 characters.');
+        }
+
+        const { data, error } = await supabase
+          .from('post_comments')
+          .update({
+            content: trimmedContent
+          })
+          .eq('id', commentId)
+          .eq('user_id', session.user.id)
+          .select();
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error('Unauthorized or comment not found.');
+        }
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to update comment:', err);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return { success: false, error: 'Supabase integration is offline.' };
+  };
+
+  const deletePostComment = async (commentId) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Authentication required to delete a comment.');
+        }
+
+        const { data, error } = await supabase
+          .from('post_comments')
+          .delete()
+          .eq('id', commentId)
+          .eq('user_id', session.user.id)
+          .select();
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error('Unauthorized or comment not found.');
+        }
+
+        await fetchPostsFromSupabase();
+        return { success: true };
+      } catch (err) {
+        console.error('Failed to delete comment:', err);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return { success: false, error: 'Supabase integration is offline.' };
   };
 
   return (
@@ -578,7 +871,14 @@ export function AppProvider({ children }) {
         toggleJoinGroup,
         createPost,
         toggleLikePost,
-        addComment
+        addComment,
+        updatePost,
+        deletePost,
+        updatePostComment,
+        deletePostComment,
+        loadingFeed,
+        feedError,
+        isSupabaseActive: isSupabaseActive()
       }}
     >
       {children}

@@ -14,6 +14,13 @@ export default function YourStory() {
     createPost,
     toggleLikePost,
     addComment,
+    updatePost,
+    deletePost,
+    updatePostComment,
+    deletePostComment,
+    loadingFeed,
+    feedError,
+    isSupabaseActive,
     setIsAuthModalOpen,
     setAuthMode
   } = useApp();
@@ -24,6 +31,17 @@ export default function YourStory() {
   const [commentInputs, setCommentInputs] = useState({}); // { postId: 'comment text' }
   const [expandedComments, setExpandedComments] = useState({}); // { postId: true }
   const [selectedHashtag, setSelectedHashtag] = useState(null);
+
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editPostText, setEditPostText] = useState('');
+  const [editPostGroupId, setEditPostGroupId] = useState('caregivers');
+  const [savingPostEdit, setSavingPostEdit] = useState(false);
+
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editCommentText, setEditCommentText] = useState('');
+  const [savingCommentEdit, setSavingCommentEdit] = useState(false);
+
+  const [feedActionError, setFeedActionError] = useState(null);
 
   // Poll state
   const [pollVote, setPollVote] = useState(() => {
@@ -74,8 +92,13 @@ export default function YourStory() {
     setSelectedHashtag(null);
   };
 
-  const handleCreatePost = (e) => {
+  const handleCreatePost = async (e) => {
     e.preventDefault();
+    setFeedActionError(null);
+    if (!isSupabaseActive) {
+      setFeedActionError('Supabase is offline. Cannot create posts.');
+      return;
+    }
     if (!user) {
       setAuthMode('login');
       setIsAuthModalOpen(true);
@@ -83,14 +106,22 @@ export default function YourStory() {
     }
     if (!newPostContent.trim()) return;
 
-    // Post to the active group, or default to caregivers if 'all' is selected
     const targetGroup = activeGroupId === 'all' ? 'caregivers' : activeGroupId;
-    createPost(newPostContent, targetGroup);
-    setNewPostContent('');
+    const result = await createPost(newPostContent, targetGroup);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    } else {
+      setNewPostContent('');
+    }
   };
 
-  const handleAddComment = (postId, e) => {
+  const handleAddComment = async (postId, e) => {
     e.preventDefault();
+    setFeedActionError(null);
+    if (!isSupabaseActive) {
+      setFeedActionError('Supabase is offline. Cannot add comments.');
+      return;
+    }
     if (!user) {
       setAuthMode('login');
       setIsAuthModalOpen(true);
@@ -99,9 +130,101 @@ export default function YourStory() {
     const text = commentInputs[postId];
     if (!text || !text.trim()) return;
 
-    addComment(postId, text.trim());
-    setCommentInputs(prev => ({ ...prev, [postId]: '' }));
-    setExpandedComments(prev => ({ ...prev, [postId]: true }));
+    const result = await addComment(postId, text.trim());
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    } else {
+      setCommentInputs(prev => ({ ...prev, [postId]: '' }));
+      setExpandedComments(prev => ({ ...prev, [postId]: true }));
+    }
+  };
+
+  const handleLikePost = async (postId) => {
+    setFeedActionError(null);
+    if (!isSupabaseActive) {
+      setFeedActionError('Supabase is offline. Cannot like posts.');
+      return;
+    }
+    if (!user) {
+      setAuthMode('login');
+      setIsAuthModalOpen(true);
+      return;
+    }
+    const result = await toggleLikePost(postId);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    }
+  };
+
+  const handleEditPostStart = (post) => {
+    setEditingPostId(post.id);
+    setEditPostText(post.content);
+    setEditPostGroupId(post.groupId);
+    setFeedActionError(null);
+  };
+
+  const handleEditPostCancel = () => {
+    setEditingPostId(null);
+    setEditPostText('');
+    setFeedActionError(null);
+  };
+
+  const handleUpdatePost = async (postId) => {
+    setFeedActionError(null);
+    if (!editPostText.trim()) return;
+    setSavingPostEdit(true);
+    const result = await updatePost(postId, editPostText, editPostGroupId);
+    setSavingPostEdit(false);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    } else {
+      setEditingPostId(null);
+      setEditPostText('');
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    if (!confirm('Are you sure you want to delete this post? All likes and comments will be deleted.')) return;
+    setFeedActionError(null);
+    const result = await deletePost(postId);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    }
+  };
+
+  const handleEditCommentStart = (comment) => {
+    setEditingCommentId(comment.id);
+    setEditCommentText(comment.content);
+    setFeedActionError(null);
+  };
+
+  const handleEditCommentCancel = () => {
+    setEditingCommentId(null);
+    setEditCommentText('');
+    setFeedActionError(null);
+  };
+
+  const handleUpdateComment = async (commentId) => {
+    setFeedActionError(null);
+    if (!editCommentText.trim()) return;
+    setSavingCommentEdit(true);
+    const result = await updatePostComment(commentId, editCommentText);
+    setSavingCommentEdit(false);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    } else {
+      setEditingCommentId(null);
+      setEditCommentText('');
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+    setFeedActionError(null);
+    const result = await deletePostComment(commentId);
+    if (result && !result.success) {
+      setFeedActionError(result.error);
+    }
   };
 
   const toggleCommentsExpansion = (postId) => {
@@ -323,10 +446,39 @@ export default function YourStory() {
               </div>
             )}
 
+            {/* Offline & Error banners */}
+            {!isSupabaseActive && (
+              <div className="glass-panel rounded-2xl p-6 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-center mb-6">
+                <span className="text-2xl mr-2">⚠️</span>
+                <strong className="font-extrabold">Offline Mode:</strong> Supabase environment variables are missing or use default placeholder keys. The community feed is currently read-only. Creating posts, likes, and comments is disabled.
+              </div>
+            )}
+
+            {feedError && (
+              <div className="glass-panel rounded-2xl p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-350 text-center mb-6">
+                <span className="text-2xl mr-2">❌</span>
+                <strong className="font-extrabold">Database Error:</strong> {feedError}
+              </div>
+            )}
+
+            {feedActionError && (
+              <div className="glass-panel rounded-2xl p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-350 text-xs font-semibold rounded-xl flex items-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{feedActionError}</span>
+                <button onClick={() => setFeedActionError(null)} className="ml-auto text-red-600 dark:text-red-400 font-bold hover:text-red-800 dark:hover:text-red-300">✕</button>
+              </div>
+            )}
+
             {/* Create Post Card */}
             <div className="glass-panel rounded-2xl p-6">
               <h3 className="text-sm font-extrabold uppercase tracking-wider text-brand-purple-dark/60 mb-3">Share something with the community</h3>
-              {user ? (
+              {!isSupabaseActive ? (
+                <div className="bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200/50 rounded-xl p-5 text-center">
+                  <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Posting to community feed is offline.</p>
+                </div>
+              ) : user ? (
                 <form onSubmit={handleCreatePost} className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-full border-2 border-white p-0.5 shrink-0 bg-brand-cream drop-shadow-sm">
@@ -377,9 +529,16 @@ export default function YourStory() {
 
             {/* Posts Feed List */}
             <div className="space-y-6">
-              {tabFilteredPosts.length > 0 ? (
+              {loadingFeed ? (
+                <div className="flex flex-col items-center justify-center py-20 bg-white/40 dark:bg-gray-950/20 rounded-2xl border border-white/60 p-6">
+                  <div className="w-10 h-10 border-4 border-brand-purple border-t-transparent rounded-full animate-spin"></div>
+                  <span className="mt-4 text-sm font-extrabold text-brand-purple-dark">Loading community posts...</span>
+                </div>
+              ) : tabFilteredPosts.length > 0 ? (
                 tabFilteredPosts.map((post, index) => {
                   const isJoinedGroup = joinedGroups.includes(post.groupId);
+                  const isPostOwner = user && user.id === post.authorId;
+
                   return (
                     <article key={post.id} className="glass-panel rounded-2xl p-6 space-y-4 relative overflow-hidden transition-all duration-300 hover:shadow-md">
                       {/* Post Author / Group Header */}
@@ -403,21 +562,79 @@ export default function YourStory() {
                           </div>
                         </div>
 
-                        {/* Trending Rank Badge */}
-                        {activeTab === 'Trending' && (
-                          <span className="text-xs font-extrabold px-2.5 py-1 bg-amber-500/10 text-amber-600 rounded-full flex items-center gap-1 border border-amber-500/20 shadow-sm animate-pulse shrink-0">
-                            🔥 #{index + 1}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-3 shrink-0">
+                          {/* Owner Edit/Delete options */}
+                          {isSupabaseActive && isPostOwner && editingPostId !== post.id && (
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleEditPostStart(post)}
+                                className="text-xs font-extrabold text-brand-purple hover:underline"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeletePost(post.id)}
+                                className="text-xs font-extrabold text-red-500 hover:underline"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Trending Rank Badge */}
+                          {activeTab === 'Trending' && (
+                            <span className="text-xs font-extrabold px-2.5 py-1 bg-amber-500/10 text-amber-600 rounded-full flex items-center gap-1 border border-amber-500/20 shadow-sm animate-pulse shrink-0">
+                              🔥 #{index + 1}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Post Content */}
-                      <p className="text-sm text-gray-800 font-medium leading-relaxed whitespace-pre-line pl-1">{post.content}</p>
+                      {/* Post Content or Edit Form */}
+                      {editingPostId === post.id ? (
+                        <div className="space-y-3 pl-1">
+                          <textarea
+                            value={editPostText}
+                            onChange={(e) => setEditPostText(e.target.value)}
+                            rows={3}
+                            className="w-full p-3 text-sm text-gray-800 border border-gray-200 rounded-xl focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition bg-white/60 focus:bg-white"
+                          />
+                          <div className="flex items-center gap-3">
+                            <label className="text-xs font-bold text-gray-655">Post Group:</label>
+                            <select
+                              value={editPostGroupId}
+                              onChange={(e) => setEditPostGroupId(e.target.value)}
+                              className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white/70 text-xs font-semibold text-gray-700 focus:outline-none focus:border-brand-purple"
+                            >
+                              <option value="caregivers">Caregivers and Allies</option>
+                              <option value="stories">Rare Disease Stories</option>
+                              <option value="community">General Community</option>
+                            </select>
+                          </div>
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              onClick={handleEditPostCancel}
+                              className="px-3 py-1.5 text-xs font-semibold text-gray-500 hover:text-gray-800 transition"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={() => handleUpdatePost(post.id)}
+                              disabled={savingPostEdit || !editPostText.trim()}
+                              className="px-3 py-1.5 text-xs font-bold bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg transition"
+                            >
+                              {savingPostEdit ? 'Saving...' : 'Save'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-800 font-medium leading-relaxed whitespace-pre-line pl-1">{post.content}</p>
+                      )}
 
                       {/* Action Counters (Likes / Comments) */}
                       <div className="flex items-center gap-6 pt-3 border-t border-brand-purple/10 text-brand-purple-dark/70 text-xs font-bold">
                         <button
-                          onClick={() => toggleLikePost(post.id)}
+                          onClick={() => handleLikePost(post.id)}
                           className={`flex items-center gap-1.5 hover:text-brand-purple transition transform active:scale-95 ${
                             post.isLiked ? 'text-brand-purple' : ''
                           }`}
@@ -444,20 +661,72 @@ export default function YourStory() {
                         <div className="space-y-4 pt-4 border-t border-brand-purple/10 bg-white/40 p-4 rounded-xl">
                           {post.comments.length > 0 && (
                             <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-                              {post.comments.map((comment) => (
-                                <div key={comment.id} className="text-xs space-y-1">
-                                  <div className="flex items-center justify-between">
-                                    <span className="font-extrabold text-brand-purple-dark">{comment.author}</span>
-                                    <span className="text-brand-purple-dark/50 font-semibold">{new Date(comment.timestamp).toLocaleDateString()}</span>
+                              {post.comments.map((comment) => {
+                                const isCommentOwner = user && user.id === comment.userId;
+                                return (
+                                  <div key={comment.id} className="text-xs space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="font-extrabold text-brand-purple-dark">{comment.author}</span>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-brand-purple-dark/50 font-semibold">{new Date(comment.timestamp).toLocaleDateString()}</span>
+                                        {isSupabaseActive && isCommentOwner && editingCommentId !== comment.id && (
+                                          <>
+                                            <button
+                                              onClick={() => handleEditCommentStart(comment)}
+                                              className="font-bold text-brand-purple hover:underline"
+                                            >
+                                              Edit
+                                            </button>
+                                            <button
+                                              onClick={() => handleDeleteComment(comment.id)}
+                                              className="font-bold text-red-500 hover:underline"
+                                            >
+                                              Delete
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                    
+                                    {editingCommentId === comment.id ? (
+                                      <div className="mt-2 space-y-2 bg-white/60 p-3 rounded-lg border border-white">
+                                        <textarea
+                                          value={editCommentText}
+                                          onChange={(e) => setEditCommentText(e.target.value)}
+                                          rows={2}
+                                          className="w-full p-2 text-xs text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-purple"
+                                        />
+                                        <div className="flex gap-2 justify-end">
+                                          <button
+                                            onClick={handleEditCommentCancel}
+                                            className="px-2 py-1 text-[10px] font-semibold text-gray-500 hover:text-gray-800"
+                                          >
+                                            Cancel
+                                          </button>
+                                          <button
+                                            onClick={() => handleUpdateComment(comment.id)}
+                                            disabled={savingCommentEdit || !editCommentText.trim()}
+                                            className="px-2 py-1 text-[10px] font-bold bg-brand-purple text-white rounded-md"
+                                          >
+                                            {savingCommentEdit ? 'Saving...' : 'Save'}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <p className="text-gray-800 font-medium bg-white/60 p-2.5 rounded-lg border border-white shadow-sm">{comment.content}</p>
+                                    )}
                                   </div>
-                                  <p className="text-gray-800 font-medium bg-white/60 p-2.5 rounded-lg border border-white shadow-sm">{comment.content}</p>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           )}
 
                           {/* Comment Input */}
-                          {user ? (
+                          {!isSupabaseActive ? (
+                            <p className="text-center text-xs font-semibold text-amber-800 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+                              Comments are disabled because Supabase is offline.
+                            </p>
+                          ) : user ? (
                             <form
                               onSubmit={(e) => handleAddComment(post.id, e)}
                               className="flex items-center gap-2"
