@@ -18,7 +18,8 @@ export default function AuthModal() {
   const [role, setRole] = useState('Supporter');
   const [error, setError] = useState('');
 
-  const isSupabaseActiveVal = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+  const isSupabaseActiveVal = supabase &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL && 
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'your-supabase-anon-key-here';
 

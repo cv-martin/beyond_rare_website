@@ -42,7 +42,7 @@ export default function BlogComments({ postSlug }: BlogCommentsProps) {
   const isSupabaseConfigured = () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    return !!(url && key && key !== 'your-supabase-anon-key-here');
+    return !!(supabase && url && key && key !== 'your-supabase-anon-key-here');
   };
 
   const activeSupabase = isSupabaseConfigured();
@@ -258,6 +258,7 @@ export default function BlogComments({ postSlug }: BlogCommentsProps) {
 
   // Delete comment
   const handleCommentDelete = async (commentId: string) => {
+    if (!activeSupabase) return;
     if (!confirm('Are you sure you want to delete this comment?')) return;
 
     const { data: { session } } = await supabase.auth.getSession();
@@ -298,7 +299,7 @@ export default function BlogComments({ postSlug }: BlogCommentsProps) {
 
   // Save edited comment
   const handleCommentUpdate = async (commentId: string) => {
-    if (!editText.trim() || savingEdit) return;
+    if (!activeSupabase || !editText.trim() || savingEdit) return;
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {

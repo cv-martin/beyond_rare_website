@@ -72,7 +72,7 @@ export function AppProvider({ children }) {
   const isSupabaseActive = () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    return !!(url && key && key !== 'your-supabase-anon-key-here');
+    return !!(supabase && url && key && key !== 'your-supabase-anon-key-here');
   };
 
 
