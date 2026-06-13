@@ -49,7 +49,7 @@ export default function ProfilePage() {
     setIsAuthModalOpen(true);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     setError('');
     setSuccessMsg('');
@@ -61,7 +61,7 @@ export default function ProfilePage() {
 
     const selectedAvatar = customAvatarUrl.trim() ? customAvatarUrl.trim() : avatar;
 
-    const result = updateProfile({
+    const result = await updateProfile({
       name: name.trim(),
       bio: bio.trim(),
       role,
@@ -238,13 +238,14 @@ export default function ProfilePage() {
                   <div>
                     <label className="block text-[10px] font-extrabold text-gray-600 uppercase tracking-wider mb-1">Full Name</label>
                     <input
-                      type="text"
-                      required
-                      data-clarity-mask="true"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="My Name"
-                      className="w-full px-3 py-2 border border-gray-200 bg-white/70 focus:bg-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none rounded-xl text-xs text-gray-800 font-semibold transition"
+                       type="text"
+                       required
+                       autoComplete="name"
+                       data-clarity-mask="true"
+                       value={name}
+                       onChange={(e) => setName(e.target.value)}
+                       placeholder="My Name"
+                       className="w-full px-3 py-2 border border-gray-200 bg-white/70 focus:bg-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none rounded-xl text-xs text-gray-800 font-semibold transition"
                     />
                   </div>
 

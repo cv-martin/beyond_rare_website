@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/utils/supabaseClient';
 
 const AppContext = createContext();
 
@@ -68,17 +69,116 @@ export function AppProvider({ children }) {
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
   const [registeredUsers, setRegisteredUsers] = useState([]);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('br_user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      if (parsedUser.avatar && parsedUser.avatar.startsWith('/beyond_rare_website')) {
-        parsedUser.avatar = parsedUser.avatar.replace('/beyond_rare_website', '');
-      }
-      setUser(parsedUser);
-    }
+  const isSupabaseActive = () => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    return !!(url && key && key !== 'your-supabase-anon-key-here');
+  };
 
+
+
+  const sanitizeLoadedUser = (u) => {
+    if (!u) return null;
+    const lower = (u.name || '').toLowerCase();
+    if (lower.includes('bypass') || lower.includes('password') || u.name === 'OAuthBypass123!') {
+      u.name = u.email ? u.email.split('@')[0] : 'Member';
+      try {
+        localStorage.setItem('br_user', JSON.stringify(u));
+      } catch (e) {}
+    }
+    return u;
+  };
+
+  const syncProfile = async (authUser, typedPassword = null) => {
+    try {
+      let { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+      
+      let cleanName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || authUser.email.split('@')[0];
+
+      // Safeguard to prevent bypass tokens or password keys in metadata from polluting the profile name
+      const isCorrupted = (nameStr) => {
+        const lower = (nameStr || '').toLowerCase();
+        if (lower.includes('bypass') || lower.includes('password')) return true;
+        if (typedPassword && nameStr === typedPassword) return true;
+        return false;
+      };
+
+      if (isCorrupted(cleanName)) {
+        cleanName = authUser.email.split('@')[0];
+      }
+
+      if (error && (error.code === 'PGRST116' || error.message?.includes('0 rows'))) {
+        // Create profile row dynamically if it is missing
+        const newProfile = {
+          id: authUser.id,
+          name: cleanName,
+          avatar: authUser.user_metadata?.avatar_url || authUser.user_metadata?.avatar || '/images/logo.avif',
+          role: authUser.user_metadata?.role || 'Supporter',
+          bio: ''
+        };
+        const { data: insertedProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert(newProfile)
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error('Error inserting missing profile row:', insertError.message, insertError.details, insertError.hint || '');
+        } else {
+          profile = insertedProfile;
+        }
+      } else if (profile) {
+        // Auto-cleanup check: If display name is set to a bypass key, password placeholder, or matching credentials, clean it
+        if (isCorrupted(profile.name)) {
+          const { data: updatedProfile, error: updateError } = await supabase
+            .from('profiles')
+            .update({ name: cleanName, updated_at: new Date().toISOString() })
+            .eq('id', authUser.id)
+            .select()
+            .single();
+
+          if (updateError) {
+            console.error('Error cleaning up password name in profile:', updateError.message, updateError.details, updateError.hint || '');
+          } else if (updatedProfile) {
+            profile = updatedProfile;
+          }
+        }
+      }
+
+      if (profile) {
+        const mergedUser = {
+          id: authUser.id,
+          email: authUser.email,
+          ...profile,
+          joinDate: profile.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'June 2026'
+        };
+        setUser(mergedUser);
+        localStorage.setItem('br_user', JSON.stringify(mergedUser));
+      } else {
+        const fallbackUser = {
+          id: authUser.id,
+          email: authUser.email,
+          name: cleanName,
+          avatar: authUser.user_metadata?.avatar || '/images/logo.avif',
+          role: authUser.user_metadata?.role || 'Supporter',
+          bio: '',
+          joinDate: 'June 2026'
+        };
+        setUser(fallbackUser);
+        localStorage.setItem('br_user', JSON.stringify(fallbackUser));
+      }
+    } catch (err) {
+      console.error('Profile sync error:', err);
+    }
+  };
+
+  // Load from localStorage / Supabase on mount
+  useEffect(() => {
+    // 1. Load static/mock collections
     const storedPosts = localStorage.getItem('br_posts');
     if (storedPosts) {
       const parsedPosts = JSON.parse(storedPosts).map(p => ({
@@ -127,10 +227,75 @@ export function AppProvider({ children }) {
       localStorage.setItem('br_registered_users', JSON.stringify(usersList));
     }
     setRegisteredUsers(usersList);
+
+    if (isSupabaseActive()) {
+      const initSession = async () => {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            await syncProfile(session.user);
+          } else {
+            const storedUser = localStorage.getItem('br_user');
+            if (storedUser) {
+              const parsed = JSON.parse(storedUser);
+              setUser(sanitizeLoadedUser(parsed));
+            }
+          }
+        } catch (e) {
+          console.error('Failed to get Supabase session on mount:', e);
+        }
+      };
+
+      initSession();
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+          await syncProfile(session.user);
+        } else {
+          setUser(null);
+          localStorage.removeItem('br_user');
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    } else {
+      // Fallback local storage auth
+      const storedUser = localStorage.getItem('br_user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.avatar && parsedUser.avatar.startsWith('/beyond_rare_website')) {
+          parsedUser.avatar = parsedUser.avatar.replace('/beyond_rare_website', '');
+        }
+        setUser(sanitizeLoadedUser(parsedUser));
+      }
+    }
   }, []);
 
-  // Sync state helpers
-  const login = (email, password) => {
+  const login = async (email, password) => {
+    if (isSupabaseActive()) {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password: password
+        });
+
+        if (error) {
+          return { success: false, error: error.message };
+        }
+
+        if (data?.user) {
+          await syncProfile(data.user, password);
+          setIsAuthModalOpen(false);
+          return { success: true };
+        }
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    }
+
+    // Fallback Mock Login
     const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
     const foundUser = storedUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
     if (!foundUser) {
@@ -145,12 +310,53 @@ export function AppProvider({ children }) {
     return { success: true };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (isSupabaseActive()) {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.error('Error signing out of Supabase:', e);
+      }
+    }
     setUser(null);
     localStorage.removeItem('br_user');
   };
 
-  const register = (email, name, password, role = 'Supporter') => {
+  const register = async (email, name, password, role = 'Supporter') => {
+    if (isSupabaseActive()) {
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password: password,
+          options: {
+            data: {
+              name,
+              role,
+              avatar_url: '/images/logo.avif'
+            }
+          }
+        });
+
+        if (error) {
+          if (error.message.includes('User already registered')) {
+            return await login(email, password);
+          }
+          return { success: false, error: error.message };
+        }
+
+        if (data?.user) {
+          // wait slightly for database trigger to run
+          await new Promise(resolve => setTimeout(resolve, 600));
+          await syncProfile(data.user, password);
+          setIsAuthModalOpen(false);
+          return { success: true };
+        }
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    }
+
+    // Fallback Mock Register
     const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
     const exists = storedUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
     if (exists) {
@@ -177,7 +383,46 @@ export function AppProvider({ children }) {
     return { success: true };
   };
 
-  const updateProfile = (updatedData) => {
+  const updateProfile = async (updatedData) => {
+    if (isSupabaseActive() && user?.id) {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            name: updatedData.name,
+            avatar: updatedData.avatar,
+            role: updatedData.role,
+            bio: updatedData.bio,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user.id);
+
+        if (error) {
+          return { success: false, error: error.message };
+        }
+
+        // update user auth metadata
+        await supabase.auth.updateUser({
+          data: {
+            name: updatedData.name,
+            avatar: updatedData.avatar,
+            role: updatedData.role,
+            bio: updatedData.bio
+          }
+        });
+
+        // Sync local state
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          await syncProfile(authUser);
+        }
+        return { success: true };
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    }
+
+    // Fallback Mock Update Profile
     if (!user) return { success: false, error: 'No active user session.' };
 
     const storedUsers = JSON.parse(localStorage.getItem('br_registered_users') || '[]');
@@ -243,6 +488,7 @@ export function AppProvider({ children }) {
 
     return { success: true };
   };
+
 
   const toggleJoinGroup = (groupId) => {
     let updated;
